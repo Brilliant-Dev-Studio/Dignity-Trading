@@ -1,0 +1,58 @@
+.cursor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+.dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in oklab, var(--brand-400) 75%, white),
+    color-mix(in oklab, var(--brand-700) 55%, black)
+  );
+  opacity: 0.75;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, width, height, opacity;
+  filter: drop-shadow(
+    0 0 22px color-mix(in oklab, var(--brand-400) 35%, transparent)
+  );
+  mix-blend-mode: plus-lighter;
+}
+
+.ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  background:
+    radial-gradient(
+      60% 60% at 50% 40%,
+      color-mix(in oklab, var(--brand-400) 12%, transparent),
+      transparent 70%
+    ),
+    rgb(0 0 0 / 12%);
+  opacity: 0.5;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, width, height, opacity;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 8%),
+    0 0 30px color-mix(in oklab, var(--brand-400) 12%, transparent),
+    0 18px 45px rgb(0 0 0 / 30%);
+  mix-blend-mode: plus-lighter;
+}
+
+.hidden {
+  opacity: 0;
+}
+
