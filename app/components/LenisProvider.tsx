@@ -2,12 +2,18 @@
 
 import Lenis from "lenis";
 import { type PropsWithChildren, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export default function LenisProvider({ children }: PropsWithChildren) {
+  const pathname = usePathname();
   const rafIdRef = useRef<number | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    if (pathname?.startsWith("/admin")) {
+      return;
+    }
+
     // Avoid native smooth scroll fighting Lenis (we still smooth-scroll anchors via Lenis).
     document.documentElement.style.scrollBehavior = "auto";
 
@@ -55,7 +61,7 @@ export default function LenisProvider({ children }: PropsWithChildren) {
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [pathname]);
 
   return children;
 }

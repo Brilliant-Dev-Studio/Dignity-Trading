@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="666" height="375" viewBox="0 0 666 375" fill="none">
+  <style>
+    .bar { transform-box: fill-box; transform-origin: center bottom; }
+  </style>
+
+  <!-- Bars only (transparent background). IDs are stable for animation. -->
+  <g id="crypto-chart-bars">
+    <rect id="bar-1" class="bar" x="70"  y="210" width="34" height="145" rx="10" fill="#22C55E"/>
+    <rect id="bar-2" class="bar" x="120" y="175" width="34" height="180" rx="10" fill="#EF4444"/>
+    <rect id="bar-3" class="bar" x="170" y="235" width="34" height="120" rx="10" fill="#22C55E"/>
+
+    <rect id="bar-4" class="bar" x="240" y="140" width="34" height="215" rx="10" fill="#EF4444"/>
+    <rect id="bar-5" class="bar" x="290" y="95"  width="34" height="260" rx="10" fill="#22C55E"/>
+    <rect id="bar-6" class="bar" x="340" y="160" width="34" height="195" rx="10" fill="#EF4444"/>
+
+    <rect id="bar-7" class="bar" x="410" y="120" width="34" height="235" rx="10" fill="#22C55E"/>
+    <rect id="bar-8" class="bar" x="460" y="70"  width="34" height="285" rx="10" fill="#EF4444"/>
+    <rect id="bar-9" class="bar" x="510" y="150" width="34" height="205" rx="10" fill="#22C55E"/>
+
+    <rect id="bar-10" class="bar" x="580" y="260" width="34" height="95"  rx="10" fill="#EF4444"/>
+  </g>
+</svg>

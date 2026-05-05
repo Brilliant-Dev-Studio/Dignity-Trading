@@ -9,6 +9,7 @@ export type BlurTextProps = {
   text?: string;
   delay?: number;
   className?: string;
+  start?: boolean;
   animateBy?: "words" | "letters";
   direction?: "top" | "bottom";
   threshold?: number;
@@ -41,15 +42,16 @@ const BlurText: React.FC<BlurTextProps> = ({
   text = "",
   delay = 200,
   className = "",
+  start,
   animateBy = "words",
   direction = "top",
   threshold = 0.1,
   rootMargin = "0px",
   animationFrom,
   animationTo,
-  easing = (t: number) => t,
+  easing = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2),
   onAnimationComplete,
-  stepDuration = 0.35,
+  stepDuration = 0.45,
   as = "p",
 }) => {
   const elements = animateBy === "words" ? text.split(" ") : text.split("");
@@ -57,6 +59,11 @@ const BlurText: React.FC<BlurTextProps> = ({
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    if (start === true) {
+      setInView(true);
+      return;
+    }
+    if (start === false) return;
     if (!ref.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -69,24 +76,23 @@ const BlurText: React.FC<BlurTextProps> = ({
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [start, threshold, rootMargin]);
 
   const defaultFrom = useMemo(
     () =>
       direction === "top"
-        ? { filter: "blur(10px)", opacity: 0, y: -50 }
-        : { filter: "blur(10px)", opacity: 0, y: 50 },
+        ? { opacity: 0, y: -24 }
+        : { opacity: 0, y: 24 },
     [direction],
   );
 
   const defaultTo = useMemo(
     () => [
       {
-        filter: "blur(5px)",
-        opacity: 0.5,
-        y: direction === "top" ? 5 : -5,
+        opacity: 0.6,
+        y: direction === "top" ? 2 : -2,
       },
-      { filter: "blur(0px)", opacity: 1, y: 0 },
+      { opacity: 1, y: 0 },
     ],
     [direction],
   );
