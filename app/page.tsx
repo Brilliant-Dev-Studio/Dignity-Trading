@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 
 import Footer from "./components/Footer";
 import HeroIntro from "./components/HeroIntro";
+import AnimatedCoin from "./components/AnimatedCoin";
 import StarBorder from "./components/StarBorder";
 import DotGrid from "./components/DotGrid";
 import Reveal from "./components/Reveal";
@@ -212,11 +213,18 @@ export default function Home() {
               >
                 Our mission
               </StarBorder>
-              <h2
-                className={`mt-4 text-3xl font-semibold tracking-tight sm:text-4xl ${chromeTitle}`}
-              >
-                Our Mission
-              </h2>
+              <div className="mt-4 flex items-center justify-center gap-2 sm:gap-3">
+                <AnimatedCoin
+                  src="/bitcoin.png"
+                  alt="Bitcoin"
+                  sizeClassName="h-20 w-20 sm:h-24 sm:w-24"
+                />
+                <h2
+                  className={`text-3xl font-semibold tracking-tight sm:text-4xl ${chromeTitle}`}
+                >
+                  Our Mission
+                </h2>
+              </div>
               <p
                 className={`mx-auto mt-4 max-w-2xl text-sm leading-6 sm:text-base sm:leading-7 ${chromeDesc}`}
               >

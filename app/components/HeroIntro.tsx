@@ -143,7 +143,17 @@ export default function HeroIntro() {
         ],
       },
       { label: "Market Anaylsis", href: "/resources" },
-      { label: "Forex Tools", href: "/tools" },
+      {
+        label: "Forex Tools",
+        href: "/tools",
+        children: [
+          { label: "Economics Calendar", href: "/tools/economics-calendar" },
+          { label: "Position Sizing Calculator", href: "/tools/position-sizing-calculator" },
+          { label: "Pip Calculator", href: "/tools/pip-calculator" },
+          { label: "Market Hours", href: "/tools/market-hours" },
+          { label: "Charts", href: "/tools/charts" },
+        ],
+      },
       { label: "Blog", href: "/blog" },
       { label: "Testimonial", href: "/#testimonial" },
       { label: "Open Trading Account", href: "/#open-account" },
