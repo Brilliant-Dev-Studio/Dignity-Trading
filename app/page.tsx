@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Check } from "lucide-react";
 
-import Footer from "./components/Footer";
 import HeroIntro from "./components/HeroIntro";
 import AnimatedCoin from "./components/AnimatedCoin";
+import FloatingCoinsBackground from "./components/FloatingCoinsBackground";
 import StarBorder from "./components/StarBorder";
 import DotGrid from "./components/DotGrid";
 import Reveal from "./components/Reveal";
@@ -179,16 +179,25 @@ export default function Home() {
     "bg-[linear-gradient(135deg,rgba(255,255,255,0.70)_0%,rgba(255,255,255,0.55)_40%,color-mix(in_oklab,var(--brand-400)_45%,white)_100%)] bg-clip-text text-transparent opacity-80";
 
   return (
-    <div className="min-h-dvh bg-black text-white">
-      <HeroIntro />
+    <div className="relative min-h-dvh bg-black text-white">
+      <FloatingCoinsBackground />
+      <div className="relative z-10">
+        <HeroIntro showHeader={false} />
 
-      <main className="relative">
+        <main className="relative">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(700px_180px_at_50%_0%,rgba(84,168,230,0.18),transparent_70%)]" />
 
         <section id="mission" className="relative isolate w-full bg-black">
           {/* Full-bleed background behind the section */}
           <div className="pointer-events-none absolute inset-0 z-0 opacity-100 [background-image:radial-gradient(1100px_520px_at_18%_42%,color-mix(in_oklab,var(--brand-400)_32%,transparent),transparent_62%),radial-gradient(1100px_620px_at_82%_64%,color-mix(in_oklab,var(--brand-700)_26%,transparent),transparent_68%),radial-gradient(900px_460px_at_55%_18%,color-mix(in_oklab,var(--brand-600)_18%,transparent),transparent_62%)] blur-2xl" />
-          <div className="pointer-events-none absolute inset-0 z-0 opacity-18">
+          <FloatingCoinsBackground
+            className="z-[2] opacity-100"
+            count={10}
+            showGradient={false}
+            opacityMin={0.28}
+            opacityMax={0.55}
+          />
+          <div className="pointer-events-none absolute inset-0 z-[1] opacity-18">
             <DotGrid
               dotSize={2}
               gap={14}
@@ -202,7 +211,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="relative z-10 mx-auto w-[85%] max-w-none px-4 py-[200px] sm:px-6 lg:px-8">
+          <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-[200px] sm:w-[85%] sm:px-6 lg:px-8">
             <Reveal className="mx-auto max-w-3xl text-center">
               <StarBorder
                 as="div"
@@ -214,11 +223,6 @@ export default function Home() {
                 Our mission
               </StarBorder>
               <div className="mt-4 flex items-center justify-center gap-2 sm:gap-3">
-                <AnimatedCoin
-                  src="/bitcoin.png"
-                  alt="Bitcoin"
-                  sizeClassName="h-20 w-20 sm:h-24 sm:w-24"
-                />
                 <h2
                   className={`text-3xl font-semibold tracking-tight sm:text-4xl ${chromeTitle}`}
                 >
@@ -641,7 +645,7 @@ export default function Home() {
           <div className="pointer-events-none absolute inset-0 z-0 opacity-100 [background-image:radial-gradient(1100px_520px_at_22%_18%,color-mix(in_oklab,var(--brand-400)_26%,transparent),transparent_64%),radial-gradient(1100px_620px_at_78%_72%,color-mix(in_oklab,var(--brand-700)_22%,transparent),transparent_70%),radial-gradient(900px_460px_at_55%_40%,color-mix(in_oklab,var(--brand-600)_14%,transparent),transparent_70%)] blur-2xl" />
           <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-56 bg-[linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,0.65)_32%,rgba(0,0,0,0.18)_72%,rgba(0,0,0,0)_100%)] opacity-60" />
 
-          <div className="relative z-10 mx-auto w-[85%] max-w-none px-4 py-[200px] sm:px-6 lg:px-8">
+          <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-[200px] sm:w-[85%] sm:px-6 lg:px-8">
             <Reveal className="mx-auto max-w-3xl text-center">
               <StarBorder
                 as="div"
@@ -703,9 +707,8 @@ export default function Home() {
             </StaggerIn>
           </div>
         </section>
-      </main>
-
-      <Footer />
+        </main>
+      </div>
     </div>
   );
 }

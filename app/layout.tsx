@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
 import CursorEffects from "./components/CursorEffects";
+import AppFrame from "./components/AppFrame";
 
 export const metadata: Metadata = {
   title: "Dignity Trading",
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <LenisProvider>
           <CursorEffects />
-          {children}
+          <AppFrame>{children}</AppFrame>
         </LenisProvider>  
       </body>
     </html>

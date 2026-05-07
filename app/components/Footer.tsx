@@ -77,7 +77,7 @@ export default function Footer() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-10 [background-image:radial-gradient(rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:14px_14px]"
       />
-      <div className="mx-auto w-[85%] max-w-none px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto w-[97%] max-w-none px-4 py-14 sm:w-[85%] sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <div className="flex items-center gap-3">

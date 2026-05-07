@@ -2,13 +2,12 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 
 import BlurText from "./BlurText";
-import BorderGlow from "./BorderGlow";
-import StarBorder from "./StarBorder";
 
 const appear = {
   // Avoid animating CSS filters (can flicker with backdrop/video on some browsers).
@@ -30,15 +29,16 @@ const buttonAppear = {
   show: { opacity: 1, y: 0, scale: 1 },
 };
 
-export default function HeroIntro() {
+export default function HeroIntro({ showHeader = true }: { showHeader?: boolean }) {
   const [step, setStep] = useState(0);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
   const [headerH, setHeaderH] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [parallax, setParallax] = useState({ p: 0, vh: 0 });
   const headerRef = useRef<HTMLDivElement | null>(null);
   const didBootRef = useRef(false);
-  const closeTimerRef = useRef<number | null>(null);
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const canPortal = typeof document !== "undefined";
 
@@ -47,10 +47,8 @@ export default function HeroIntro() {
     if (didBootRef.current) return;
     didBootRef.current = true;
 
-    const t = window.setTimeout(() => {
-      // Kick off everything together (no sequential waiting).
-      setStep(5);
-    }, 120);
+    // Kick off immediately so hero text doesn't lag.
+    const t = window.setTimeout(() => setStep(5), 0);
     return () => {
       window.clearTimeout(t);
     };
@@ -100,23 +98,25 @@ export default function HeroIntro() {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenMenu(null);
+      if (e.key === "Escape") {
+        setOpenMenu(null);
+        setMobileOpen(false);
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const cancelCloseMenu = () => {
-    if (closeTimerRef.current) {
-      window.clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  };
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
 
-  const scheduleCloseMenu = () => {
-    cancelCloseMenu();
-    closeTimerRef.current = window.setTimeout(() => setOpenMenu(null), 140);
-  };
+  const closeDesktopMenu = () => setOpenMenu(null);
 
   const menu = useMemo(
     () => [
@@ -169,7 +169,7 @@ export default function HeroIntro() {
 
   const headerContent = (
     <div
-      className="mx-auto w-[95%] max-w-none px-4 sm:px-6 lg:px-8"
+      className="mx-auto w-full max-w-none pl-4 pr-0 sm:w-[95%] sm:px-6 lg:px-8"
     >
       <div
         className={`grid ${headerRowH} grid-cols-[auto_1fr_auto] items-center gap-4 min-w-0`}
@@ -206,16 +206,11 @@ export default function HeroIntro() {
           animate={step >= 2 ? "show" : "hidden"}
           transition={softTransition}
         >
-          <BorderGlow
-            borderRadius={9999}
-            glowRadius={22}
-            edgeSensitivity={10}
-            coneSpread={35}
-            glowIntensity={1.05}
-            backgroundColor="rgba(255,255,255,0.05)"
-            colors={["#54a8e6", "#2f66d4", "#243b9c"]}
-            fillOpacity={0.35}
-            className={`${headerRowH} max-w-full`}
+          <div
+            className={[
+              headerRowH,
+              "relative z-[1200] max-w-full overflow-visible rounded-full border border-white/12 bg-white/[0.05] shadow-sm backdrop-blur",
+            ].join(" ")}
           >
             <div
               className={`flex ${headerRowH} items-center gap-2 rounded-full px-2 max-w-full overflow-visible`}
@@ -225,15 +220,10 @@ export default function HeroIntro() {
                   <div
                     key={item.label}
                     className={[
-                      "relative hero-nav-item",
+                      "group relative hero-nav-item",
                       step >= 2 ? "is-in" : "",
                     ].join(" ")}
                     style={{ ["--i" as any]: idx }}
-                    onMouseEnter={() => {
-                      cancelCloseMenu();
-                      setOpenMenu(item.label);
-                    }}
-                    onMouseLeave={scheduleCloseMenu}
                   >
                     <button
                       type="button"
@@ -242,64 +232,62 @@ export default function HeroIntro() {
                       }
                       aria-haspopup="menu"
                       aria-expanded={openMenu === item.label}
-                      className={`inline-flex ${headerRowH} items-center gap-1.5 rounded-full px-4 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 whitespace-nowrap`}
+                      className={`inline-flex ${headerRowH} cursor-pointer items-center gap-1.5 rounded-full px-4 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 whitespace-nowrap`}
                     >
                       {item.label}
                       <ChevronDown
                         className={[
                           "h-3.5 w-3.5 transition-transform",
-                          openMenu === item.label ? "rotate-180" : "rotate-0",
+                          openMenu === item.label ? "rotate-180" : "rotate-0 group-hover:rotate-180",
                         ].join(" ")}
                       />
                     </button>
 
-                    {openMenu === item.label ? (
-                      <motion.div
-                        role="menu"
-                        onMouseEnter={cancelCloseMenu}
-                        onMouseLeave={scheduleCloseMenu}
-                        className="absolute left-0 top-full z-[1100] mt-2 min-w-52 overflow-hidden rounded-xl border border-white/10 bg-black/80 p-1 shadow-[0_18px_55px_rgba(0,0,0,0.55)] backdrop-blur-xl"
-                        variants={appear}
-                        initial="hidden"
-                        animate="show"
-                        transition={{ duration: 0.55, ease: softEase }}
-                      >
-                        {item.children.map((child) => (
-                          <motion.a
-                            key={child.label}
-                            href={child.href}
-                            role="menuitem"
-                            onClick={() => setOpenMenu(null)}
-                            className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
-                            variants={navItem}
-                            transition={{ duration: 0.65, ease: softEase }}
-                          >
-                            <span>{child.label}</span>
-                            <span className="text-[10px] text-white/35">
-                              ↗
-                            </span>
-                          </motion.a>
-                        ))}
-                      </motion.div>
-                    ) : null}
+                    {/* Hover bridge so cursor can reach dropdown without closing */}
+                    <div
+                      aria-hidden="true"
+                      className="absolute left-0 top-full h-3 w-full"
+                    />
+
+                    <div
+                      role="menu"
+                      className={[
+                        "absolute left-0 top-full z-[1100] min-w-52 overflow-hidden rounded-xl border border-white/10 bg-black/80 p-1 shadow-[0_18px_55px_rgba(0,0,0,0.55)] backdrop-blur-xl",
+                        "opacity-0 pointer-events-none translate-y-1 transition-[opacity,transform] duration-200",
+                        "group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-2",
+                        openMenu === item.label ? "opacity-100 pointer-events-auto translate-y-2" : "",
+                      ].join(" ")}
+                    >
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.label}
+                          href={child.href}
+                          role="menuitem"
+                          className="flex !cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-[11px] font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
+                        >
+                          <span>{child.label}</span>
+                          <span className="text-[10px] text-white/35">↗</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <a
+                  <Link
                     key={item.label}
                     href={"href" in item ? item.href : "#"}
                     className={[
-                      `inline-flex ${headerRowH} items-center rounded-full px-4 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white`,
+                      `inline-flex ${headerRowH} cursor-pointer items-center rounded-full px-4 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white`,
                       "hero-nav-item",
                       step >= 2 ? "is-in" : "",
                     ].join(" ")}
                     style={{ ["--i" as any]: idx }}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 ),
               )}
             </div>
-          </BorderGlow>
+          </div>
         </motion.div>
 
         <motion.div
@@ -309,9 +297,151 @@ export default function HeroIntro() {
           animate={step >= 3 ? "show" : "hidden"}
           transition={softTransition}
         >
-          {/* Join Youtube CTA removed (header already dense) */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className={`inline-flex ${headerRowH} w-11 items-center justify-center rounded-full bg-transparent text-white/90 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 md:hidden`}
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </motion.div>
       </div>
+    </div>
+  );
+
+  const mobileDrawer = (
+    <div className="fixed inset-0 z-[2000] md:hidden">
+      <motion.div
+        className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.18 }}
+      />
+      <motion.div
+        className="absolute right-0 top-0 h-full w-[88%] max-w-[380px] border-l border-white/10 bg-black/85 shadow-[0_40px_120px_rgba(0,0,0,0.75)] backdrop-blur-xl"
+        initial={{ x: 60, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 60, opacity: 0 }}
+        transition={{ duration: 0.32, ease: softEase }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile menu"
+      >
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(520px_220px_at_15%_30%,rgba(84,168,230,0.22),transparent_62%),radial-gradient(520px_220px_at_85%_70%,rgba(47,102,212,0.16),transparent_62%)]"
+          />
+          <div className="relative flex h-16 items-center justify-between px-4">
+            <div className="flex items-center gap-2.5">
+              <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-white/8 ring-1 ring-white/10">
+                <Image
+                  src="/logo.png"
+                  alt="Dignity Trading"
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-cover"
+                  priority={false}
+                />
+              </div>
+              <div className="leading-tight">
+                <div className="text-sm font-semibold tracking-wide text-white">
+                  Dignity Trading
+                </div>
+                <div className="text-[11px] text-white/55">Menu</div>
+              </div>
+            </div>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/8 text-white/90 ring-1 ring-white/12 transition hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          </div>
+        </div>
+
+        <div className="h-[calc(100%-64px)] overflow-y-auto px-3 pb-6">
+          <div className="mt-2 rounded-2xl border border-white/10 bg-white/[0.04] p-2 shadow-[0_18px_55px_rgba(0,0,0,0.35)]">
+          {menu.map((item) => {
+            const hasChildren = "children" in item && item.children?.length;
+            if (!hasChildren) {
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="group flex h-12 cursor-pointer items-center justify-between rounded-xl px-3 text-[15px] font-medium text-white/85 transition hover:bg-white/10 hover:text-white"
+                >
+                  <span className="truncate">{item.label}</span>
+                  <ChevronRight className="h-4 w-4 text-white/35 transition group-hover:text-white/60" />
+                </a>
+              );
+            }
+
+            const isOpen = mobileOpenGroup === item.label;
+            return (
+              <div key={item.label} className="rounded-xl">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMobileOpenGroup((cur) => (cur === item.label ? null : item.label))
+                  }
+                  className="flex h-12 w-full cursor-pointer items-center justify-between rounded-xl px-3 text-[15px] font-semibold text-white/90 transition hover:bg-white/10"
+                  aria-expanded={isOpen}
+                >
+                  <span className="truncate">{item.label}</span>
+                  <ChevronDown
+                    className={[
+                      "h-4 w-4 transition-transform",
+                      isOpen ? "rotate-180" : "rotate-0",
+                    ].join(" ")}
+                  />
+                </button>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: isOpen ? "auto" : 0,
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.22, ease: softEase }}
+                  className="overflow-hidden"
+                >
+                  <div className="pb-2 pt-1">
+                    {item.children!.map((child) => (
+                      <a
+                        key={child.label}
+                        href={child.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="group ml-1 mr-1 flex min-h-11 cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-white/72 transition hover:bg-white/10 hover:text-white"
+                      >
+                        <span className="truncate">{child.label}</span>
+                        <ChevronRight className="h-4 w-4 text-white/30 transition group-hover:text-white/55" />
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
+          </div>
+
+          <div className="mt-4 grid gap-2">
+            <a
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex h-11 cursor-pointer items-center justify-center rounded-xl bg-white/10 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/14 hover:ring-white/25"
+            >
+              Contact
+            </a>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 
@@ -379,20 +509,26 @@ export default function HeroIntro() {
         />
       </video>
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-[85%] max-w-none flex-col px-4 pb-5 pt-0 sm:px-6 sm:pb-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex min-h-dvh w-[97%] max-w-none flex-col px-4 pb-5 pt-0 sm:w-[85%] sm:px-6 sm:pb-6 lg:px-8">
         <div aria-hidden="true" style={{ height: headerH }} />
 
-        {canPortal
-          ? createPortal(stickyHeader, document.body)
-          : stickyHeader}
+        {showHeader
+          ? canPortal
+            ? createPortal(stickyHeader, document.body)
+            : stickyHeader
+          : null}
+
+        {showHeader && mobileOpen && canPortal
+          ? createPortal(mobileDrawer, document.body)
+          : null}
 
         <div
-          className="grid flex-1 gap-10 pb-14 pt-4 sm:pb-20 sm:pt-10 lg:items-center lg:gap-14 lg:pb-24 lg:pt-14 will-change-transform"
+          className="grid flex-1 justify-items-center gap-10 pb-14 pt-24 sm:pb-20 sm:pt-10 lg:justify-items-start lg:items-center lg:gap-14 lg:pb-24 lg:pt-14 will-change-transform"
           style={{ transform: `translate3d(0, ${textY}px, 0)`, opacity: textOpacity }}
         >
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
             <motion.div
-              className="inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-black/35 px-3.5 py-2 text-xs font-medium text-white/78 backdrop-blur-md sm:px-4"
+              className="mx-auto inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-black/35 px-3.5 py-2 text-xs font-medium text-white/78 backdrop-blur-md sm:px-4 lg:mx-0"
               variants={appear}
               initial="hidden"
               animate={step >= 4 ? "show" : "hidden"}
@@ -406,7 +542,7 @@ export default function HeroIntro() {
               <BlurText
                 as="span"
                 text="Rules-first trading education"
-                delay={70}
+                delay={35}
                 start={step >= 4}
                 animateBy="words"
                 direction="top"
@@ -417,11 +553,11 @@ export default function HeroIntro() {
             <div className="mt-6 text-[44px] font-semibold leading-[1.05] tracking-[0.01em] text-white sm:text-6xl">
               {step >= 5 ? (
                 <>
-                  <span className="inline-flex flex-wrap items-baseline gap-x-3">
+                  <span className="inline-flex flex-wrap items-baseline justify-center gap-x-3 lg:justify-start">
                     <BlurText
                       as="span"
                       text="Trade with"
-                      delay={70}
+                      delay={35}
                       start={heroStart}
                       animateBy="words"
                       direction="top"
@@ -430,7 +566,7 @@ export default function HeroIntro() {
                     <BlurText
                       as="span"
                       text="discipline."
-                      delay={70}
+                      delay={35}
                       start={heroStart}
                       animateBy="words"
                       direction="top"
@@ -441,10 +577,11 @@ export default function HeroIntro() {
                   <BlurText
                     as="span"
                     text="Build a repeatable system"
-                    delay={70}
+                    delay={35}
                     start={heroStart}
                     animateBy="words"
                     direction="top"
+                    className="justify-center lg:justify-start"
                   />
                 </>
               ) : (
@@ -453,7 +590,7 @@ export default function HeroIntro() {
             </div>
 
             <motion.p
-              className="mt-5 max-w-lg text-sm leading-6 text-white/70 sm:text-base sm:leading-7"
+              className="mx-auto mt-5 max-w-lg text-sm leading-6 text-white/70 sm:text-base sm:leading-7 lg:mx-0"
               variants={appear}
               initial="hidden"
               animate={heroStart ? "show" : "hidden"}
@@ -462,15 +599,16 @@ export default function HeroIntro() {
               <BlurText
                 as="span"
                 text="A structured, rules-first approach to risk, entries, and execution."
-                delay={55}
+                delay={30}
                 start={heroStart}
                 animateBy="words"
                 direction="top"
+                className="justify-center lg:justify-start"
               />
             </motion.p>
 
             <motion.div
-              className="mt-8 flex flex-wrap items-center gap-3"
+              className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
               variants={appear}
               initial="hidden"
               animate={heroStart ? "show" : "hidden"}
@@ -489,7 +627,7 @@ export default function HeroIntro() {
                 <BlurText
                   as="span"
                   text="Join the free class"
-                  delay={60}
+                  delay={30}
                   start={heroStart}
                   animateBy="words"
                   direction="top"
@@ -508,7 +646,7 @@ export default function HeroIntro() {
                 <BlurText
                   as="span"
                   text="View the program"
-                  delay={60}
+                  delay={30}
                   start={heroStart}
                   animateBy="words"
                   direction="top"
