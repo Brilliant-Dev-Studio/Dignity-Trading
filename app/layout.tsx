@@ -3,6 +3,7 @@ import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
 import CursorEffects from "./components/CursorEffects";
 import AppFrame from "./components/AppFrame";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Dignity Trading",
@@ -29,7 +30,8 @@ export default function RootLayout({
         <LenisProvider>
           <CursorEffects />
           <AppFrame>{children}</AppFrame>
-        </LenisProvider>  
+        </LenisProvider>
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );

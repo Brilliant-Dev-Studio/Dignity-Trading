@@ -1,15 +1,27 @@
 import Link from "next/link";
 
+import BlogPageChrome from "@/app/blog/BlogPageChrome";
+import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
+
 export default function ToolsPage() {
   return (
-    <main className="min-h-dvh bg-black text-white">
-      <div className="mx-auto w-[85%] max-w-none px-4 py-16 sm:px-6 lg:px-8">
-        <p className="text-xs font-medium uppercase tracking-[0.28em] text-white/55">
+    <BlogPageChrome>
+      <p
+        className={`text-xs font-semibold uppercase tracking-[0.28em] ${blogChromeTitleClass}`}
+      >
           Tools
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+      </p>
+      <div className="mt-4 inline-flex flex-col">
+        <h1
+          className={`text-4xl font-semibold tracking-tight sm:text-5xl ${blogChromeTitleClass}`}
+        >
           Checklists, calculators, templates.
         </h1>
+        <span
+          aria-hidden="true"
+          className="mt-3 h-px w-24 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--brand-400)_70%,white),transparent)] opacity-70"
+        />
+      </div>
         <p className="mt-6 max-w-2xl text-sm leading-7 text-white/70">
           This page will host the practical tools students use daily.
         </p>
@@ -27,8 +39,7 @@ export default function ToolsPage() {
             Back to home
           </Link>
         </div>
-      </div>
-    </main>
+    </BlogPageChrome>
   );
 }
 

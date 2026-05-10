@@ -77,23 +77,7 @@ export async function loginAdmin(formData: FormData) {
   }
 
   const cookieStore = await cookies();
-  cookieStore.set({
-    name: ADMIN_SESSION_COOKIE,
-    value: createSessionToken(),
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/admin",
-    maxAge: SESSION_MAX_AGE,
-  });
-
-  redirect("/admin");
-}
-
-export async function logoutAdmin() {
-  "use server";
-
-  const cookieStore = await cookies();
+  // Clear any legacy cookie scoped to /admin (older builds)
   cookieStore.set({
     name: ADMIN_SESSION_COOKIE,
     value: "",
@@ -101,6 +85,42 @@ export async function logoutAdmin() {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/admin",
+    maxAge: 0,
+  });
+  cookieStore.set({
+    name: ADMIN_SESSION_COOKIE,
+    value: createSessionToken(),
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: SESSION_MAX_AGE,
+  });
+
+  redirect("/admin?toast=login");
+}
+
+export async function logoutAdmin() {
+  "use server";
+
+  const cookieStore = await cookies();
+  // Clear both current and legacy cookie paths
+  cookieStore.set({
+    name: ADMIN_SESSION_COOKIE,
+    value: "",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/admin",
+    maxAge: 0,
+  });
+  cookieStore.set({
+    name: ADMIN_SESSION_COOKIE,
+    value: "",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
     maxAge: 0,
   });
   redirect("/admin/login");

@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Send } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { BLOG_DRAFT_STORAGE_KEY, type BlogDraft } from "@/lib/blog-draft";
+import { enhanceBlogContentForDisplay } from "@/lib/blog-html";
 
 const emptyDraft: BlogDraft = {
   title: "Untitled Blog Post",
@@ -15,6 +18,7 @@ const emptyDraft: BlogDraft = {
   tags: "",
   contentHtml: "<p>No draft content yet.</p>",
   contentText: "",
+  category: "Education",
 };
 
 function extractYoutubeId(url: string) {
@@ -176,18 +180,28 @@ function enhanceBlogHtml(html: string) {
 }
 
 export default function BlogPreview() {
+  const router = useRouter();
   const [draft, setDraft] = useState<BlogDraft>(emptyDraft);
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
 
   useEffect(() => {
     const savedDraft = window.localStorage.getItem(BLOG_DRAFT_STORAGE_KEY);
 
     if (savedDraft) {
-      setDraft(JSON.parse(savedDraft) as BlogDraft);
+      try {
+        setDraft({
+          ...emptyDraft,
+          ...(JSON.parse(savedDraft) as Partial<BlogDraft>),
+        });
+      } catch {
+        setDraft(emptyDraft);
+      }
     }
   }, []);
 
   const enhancedHtml = useMemo(
-    () => enhanceBlogHtml(draft.contentHtml),
+    () => enhanceBlogHtml(enhanceBlogContentForDisplay(draft.contentHtml)),
     [draft.contentHtml],
   );
 
@@ -195,6 +209,54 @@ export default function BlogPreview() {
     .split(",")
     .map((tag) => tag.trim())
     .filter(Boolean);
+
+  async function publishBlog() {
+    try {
+      setPublishing(true);
+      setPublishError(null);
+
+      const editingId = draft.postId?.trim();
+      const payload = {
+        title: draft.title,
+        subtitle: draft.subtitle,
+        author: draft.author,
+        coverUrl: draft.coverUrl,
+        tags: draft.tags,
+        contentHtml: draft.contentHtml,
+        contentText: draft.contentText,
+        category: draft.category ?? "Education",
+        status: "PUBLISHED" as const,
+      };
+
+      const res = editingId
+        ? await fetch(`/api/admin/blogs/${editingId}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+        : await fetch("/api/admin/blogs", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Request failed: ${res.status}${text ? ` — ${text}` : ""}`);
+      }
+
+      window.localStorage.removeItem(BLOG_DRAFT_STORAGE_KEY);
+      toast.success("Published", { description: "Your blog post is live." });
+      router.push("/admin/blogs");
+      router.refresh();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed to publish blog";
+      setPublishError(msg);
+      toast.error("Error", { description: msg });
+    } finally {
+      setPublishing(false);
+    }
+  }
 
   return (
     <div className="px-4 py-6 sm:px-6 lg:px-8">
@@ -207,18 +269,55 @@ export default function BlogPreview() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
-            href="/admin/blogs/new/write"
+            href={
+              draft.postId?.trim()
+                ? `/admin/blogs/edit/${draft.postId.trim()}/write`
+                : "/admin/blogs/new/write"
+            }
             className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-950 shadow-sm transition-colors hover:bg-zinc-50"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Form
           </Link>
-          <Button type="button">
-            <Send className="h-4 w-4" />
-            Publish Blog
-          </Button>
+          <button
+            type="button"
+            onClick={publishBlog}
+            disabled={publishing}
+            className={cn(
+              "relative inline-flex h-9 items-center justify-center gap-2 overflow-hidden rounded-md px-3",
+              "text-sm font-medium text-white shadow-sm transition",
+              "bg-zinc-950 hover:brightness-110 active:brightness-95",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950",
+              "disabled:pointer-events-none disabled:opacity-50",
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(760px_420px_at_20%_20%,rgba(84,168,230,0.34),transparent_60%),radial-gradient(620px_360px_at_84%_76%,rgba(255,190,55,0.20),transparent_64%),linear-gradient(to_bottom,rgba(0,0,0,0.10),rgba(0,0,0,0.60))]"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(rgba(255,255,255,0.20)_1px,transparent_1px)] [background-size:14px_14px]"
+            />
+            <span className="relative z-10 inline-flex items-center gap-2">
+              {publishing ? (
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                />
+              ) : (
+                <Send className="h-4 w-4" aria-hidden />
+              )}
+              {publishing ? "Publishing…" : "Publish Blog"}
+            </span>
+          </button>
         </div>
       </div>
+      {publishError ? (
+        <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+          {publishError}
+        </div>
+      ) : null}
 
       <article className="mx-auto max-w-[560px] py-5">
         <div className="mb-4 flex items-center justify-between gap-3">

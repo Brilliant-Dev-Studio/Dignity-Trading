@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function CreateBlogPage() {
-  redirect("/admin/blogs/new/details");
+  redirect("/admin/blogs/new/details?new=1");
 }

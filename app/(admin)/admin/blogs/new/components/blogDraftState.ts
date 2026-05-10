@@ -21,6 +21,7 @@ export const defaultDraft: BlogDraft = {
   tags: "Trading, Risk Management, Education",
   contentHtml: starterContent,
   contentText: "",
+  category: "Education",
 };
 
 export function safeReadDraft(): BlogDraft {

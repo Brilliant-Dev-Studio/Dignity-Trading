@@ -1,33 +1,21 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DukascopyPipCalculator from "@/app/components/DukascopyPipCalculator";
-import FloatingCoinsBackground from "@/app/components/FloatingCoinsBackground";
+import BlogPageChrome from "@/app/blog/BlogPageChrome";
+import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
 export default function PipCalculatorPage() {
   return (
-    <main className="relative isolate min-h-dvh overflow-hidden bg-black text-white">
-      <FloatingCoinsBackground
-        className="-z-10 opacity-100"
-        count={10}
-        showGradient={false}
-        opacityMin={0.18}
-        opacityMax={0.42}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 opacity-100 [background-image:radial-gradient(1100px_520px_at_18%_22%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_62%),radial-gradient(980px_620px_at_86%_78%,color-mix(in_oklab,var(--brand-700)_22%,transparent),transparent_68%),radial-gradient(820px_460px_at_55%_12%,color-mix(in_oklab,var(--brand-600)_14%,transparent),transparent_70%)] blur-2xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-56 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0)_100%)]"
-      />
-
-      <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-12 sm:w-[85%] sm:px-6 sm:py-16 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
+    <BlogPageChrome>
+        <p
+          className={`text-xs font-semibold uppercase tracking-[0.28em] ${blogChromeTitleClass}`}
+        >
           Forex Tools
         </p>
         <div className="mt-4 inline-flex flex-col">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl bg-[linear-gradient(135deg,rgba(255,255,255,0.95)_0%,color-mix(in_oklab,var(--brand-400)_38%,white)_28%,rgba(255,255,255,0.88)_55%,color-mix(in_oklab,var(--brand-700)_26%,white)_80%,rgba(255,255,255,0.92)_100%)] bg-clip-text text-transparent">
+          <h1
+            className={`text-4xl font-semibold tracking-tight sm:text-5xl ${blogChromeTitleClass}`}
+          >
             Pip Calculator
           </h1>
           <span
@@ -65,8 +53,7 @@ export default function PipCalculatorPage() {
           </Link>
         </div>
         </div>
-      </div>
-    </main>
+    </BlogPageChrome>
   );
 }
 

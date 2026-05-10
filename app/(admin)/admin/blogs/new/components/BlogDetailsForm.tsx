@@ -3,7 +3,15 @@
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { BlogDraft } from "@/lib/blog-draft";
 import { safeReadDraft, saveDraft } from "./blogDraftState";
+
+const CATEGORY_OPTIONS = [
+  "Education",
+  "Risk Management",
+  "Psychology",
+  "Strategy",
+] as const;
 
 export default function BlogDetailsForm() {
   const initial = useMemo(() => safeReadDraft(), []);
@@ -12,11 +20,20 @@ export default function BlogDetailsForm() {
   const [author, setAuthor] = useState(initial.author);
   const [coverUrl, setCoverUrl] = useState(initial.coverUrl);
   const [tags, setTags] = useState(initial.tags);
+  const [category, setCategory] = useState(
+    initial.category ?? "Education",
+  );
+
+  const categorySelectOptions = useMemo(() => {
+    const base = new Set<string>(CATEGORY_OPTIONS);
+    if (category) base.add(category);
+    return [...base];
+  }, [category]);
 
   const inputClass =
     "h-12 rounded-xl !shadow-none focus-visible:ring-0 focus-visible:ring-offset-0";
 
-  function persist(partial: Partial<typeof initial>) {
+  function persist(partial: Partial<BlogDraft>) {
     const next = { ...safeReadDraft(), ...partial };
     saveDraft(next);
   }
@@ -89,6 +106,26 @@ export default function BlogDetailsForm() {
                 Separate with commas. Example: Risk, Psychology, Strategy
               </p>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="blog-category">Category</Label>
+            <select
+              id="blog-category"
+              className="h-12 w-full rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-950 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-950"
+              value={category}
+              onChange={(event) => {
+                const value = event.target.value;
+                setCategory(value);
+                persist({ category: value });
+              }}
+            >
+              {categorySelectOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-2">

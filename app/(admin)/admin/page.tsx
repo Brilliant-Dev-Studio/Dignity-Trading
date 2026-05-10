@@ -1,6 +1,8 @@
- "use client";
+"use client";
 
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import AdminToastFromQuery from "./AdminToastFromQuery";
 import {
   Card,
   CardContent,
@@ -14,14 +16,9 @@ import {
   ChartLegend,
   ChartTooltip,
 } from "@/components/ui/chart";
-import { BookOpenText, Eye, TrendingUp } from "lucide-react";
+import { BookOpenText, Eye, Flame, TrendingUp } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, XAxis, YAxis } from "recharts";
-import {
-  formatShortDay,
-  mockBlogs,
-  parseCompactNumber,
-  parseUpdatedDate,
-} from "@/lib/mock-blogs";
+import { useEffect, useMemo, useState } from "react";
 
 const statCardStyles = [
   "border-zinc-200/70 bg-gradient-to-br from-white via-white to-sky-50/80",
@@ -30,13 +27,64 @@ const statCardStyles = [
   "border-zinc-200/70 bg-gradient-to-br from-white via-white to-violet-50/80",
 ];
 
+type TrendingBlogRow = {
+  id: string;
+  title: string;
+  slug: string;
+  reads: number;
+  category: string;
+  publishedAt: string | null;
+};
+
+type BlogAnalyticsResponse = {
+  generatedAt: string;
+  stats: {
+    blogCount: number;
+    draftCount: number;
+    totalReads: number;
+  };
+  byDay: Array<{ day: string; posts: number; reads: number }>;
+  trending: TrendingBlogRow[];
+};
+
 export default function AdminDashboardPage() {
-  const blogCount = mockBlogs.length;
-  const draftCount = mockBlogs.filter((b) => b.status === "Draft").length;
-  const totalReads = mockBlogs.reduce(
-    (sum, blog) => sum + parseCompactNumber(blog.reads),
-    0,
-  );
+  const [data, setData] = useState<BlogAnalyticsResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function run() {
+      try {
+        setLoading(true);
+        setLoadError(null);
+        const res = await fetch("/api/admin/analytics/blogs", { method: "GET" });
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        const json = (await res.json()) as BlogAnalyticsResponse;
+        if (cancelled) return;
+        setData({
+          ...json,
+          trending: Array.isArray(json.trending) ? json.trending : [],
+        });
+      } catch (e) {
+        if (cancelled) return;
+        setLoadError(e instanceof Error ? e.message : "Failed to load analytics");
+      } finally {
+        if (cancelled) return;
+        setLoading(false);
+      }
+    }
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const blogCount = data?.stats.blogCount ?? 0;
+  const draftCount = data?.stats.draftCount ?? 0;
+  const totalReads = data?.stats.totalReads ?? 0;
 
   const stats: Array<{
     label: string;
@@ -58,45 +106,19 @@ export default function AdminDashboardPage() {
     },
   ];
 
-  const byDay = (() => {
-    const now = new Date();
-    const start = new Date(now);
-    start.setDate(now.getDate() - 6);
-    start.setHours(0, 0, 0, 0);
-
-    const buckets = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      return {
-        date: d,
-        label: formatShortDay(d),
-        posts: 0,
-        reads: 0,
-      };
-    });
-
-    for (const blog of mockBlogs) {
-      const d = parseUpdatedDate(blog.updated);
-      if (!d) continue;
-      const dayStart = new Date(d);
-      dayStart.setHours(0, 0, 0, 0);
-      const idx = Math.floor(
-        (dayStart.getTime() - start.getTime()) / (24 * 60 * 60 * 1000),
-      );
-      if (idx < 0 || idx >= buckets.length) continue;
-      buckets[idx].posts += 1;
-      buckets[idx].reads += parseCompactNumber(blog.reads);
-    }
-
-    return buckets.map((b) => ({
-      day: b.label,
-      posts: b.posts,
-      reads: Math.round(b.reads),
-    }));
-  })();
+  const byDay = useMemo(() => data?.byDay ?? [], [data]);
+  const trending = useMemo(() => data?.trending ?? [], [data]);
+  const updatedLabel = useMemo(() => {
+    if (loading) return "Loading analytics…";
+    if (loadError) return "Couldn’t load analytics";
+    if (!data?.generatedAt) return "Updated from database";
+    const d = new Date(data.generatedAt);
+    return `Updated ${d.toLocaleString()}`;
+  }, [data, loadError, loading]);
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <AdminToastFromQuery />
       <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white px-5 py-5 !shadow-none sm:px-6">
         <div
           aria-hidden="true"
@@ -114,7 +136,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="mt-3 inline-flex items-center gap-2 text-xs font-medium text-zinc-600 sm:mt-0">
             <TrendingUp className="h-4 w-4 text-zinc-700" />
-            Updated from mock blog dataset
+            {updatedLabel}
           </div>
         </div>
       </div>
@@ -154,6 +176,106 @@ export default function AdminDashboardPage() {
             </Card>
           );
         })}
+      </section>
+
+      <section className="mt-6">
+        <Card className="overflow-hidden !shadow-none">
+          <CardHeader className="flex flex-col gap-3 border-b border-zinc-100 pb-4 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
+            <div className="space-y-1">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-50 ring-1 ring-amber-100">
+                  <Flame className="h-4 w-4 text-amber-700" aria-hidden />
+                </span>
+                Trending blogs
+              </CardTitle>
+              <CardDescription>
+                Published posts ranked by total reads (most popular first).
+              </CardDescription>
+            </div>
+            <Link
+              href="/admin/blogs"
+              className="shrink-0 text-sm font-medium text-sky-700 underline-offset-4 hover:text-sky-900 hover:underline"
+            >
+              Manage all posts
+            </Link>
+          </CardHeader>
+          <CardContent className="pt-4">
+            {loading ? (
+              <p className="text-sm text-zinc-500">Loading trending posts…</p>
+            ) : loadError ? (
+              <p className="text-sm text-zinc-500">
+                Couldn’t load trending posts.
+              </p>
+            ) : trending.length === 0 ? (
+              <p className="text-sm text-zinc-600">
+                No published posts yet. When you publish, they will appear here
+                by read count.
+              </p>
+            ) : (
+              <ul className="divide-y divide-zinc-100">
+                {trending.map((post, index) => (
+                  <li
+                    key={post.id}
+                    className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  >
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
+                      <span
+                        className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-zinc-100 text-xs font-semibold tabular-nums text-zinc-700"
+                        aria-label={`Rank ${index + 1}`}
+                      >
+                        {index + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-zinc-900">
+                          {post.title}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-zinc-500">
+                          <span className="font-medium text-zinc-700">
+                            {Intl.NumberFormat(undefined).format(post.reads)}{" "}
+                            read{post.reads === 1 ? "" : "s"}
+                          </span>
+                          <span aria-hidden>·</span>
+                          <span>{post.category}</span>
+                          {post.publishedAt ? (
+                            <>
+                              <span aria-hidden>·</span>
+                              <time dateTime={post.publishedAt}>
+                                {new Date(post.publishedAt).toLocaleDateString(
+                                  undefined,
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  },
+                                )}
+                              </time>
+                            </>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                      <Link
+                        href={`/admin/blogs/edit/${post.id}/details`}
+                        className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+                      >
+                        Edit
+                      </Link>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+                      >
+                        View live
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
       </section>
 
       <section className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">

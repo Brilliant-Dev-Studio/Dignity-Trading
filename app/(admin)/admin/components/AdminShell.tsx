@@ -14,7 +14,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { logoutAdminAction } from "@/lib/admin-actions";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -168,20 +167,20 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                   Protected
                 </Badge>
               ) : null}
-              <form action={logoutAdminAction} className={cn(!collapsed && "mt-3")}>
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className={cn(
-                    "w-full border-white/20 bg-white/10 text-white hover:bg-white/15",
-                    collapsed && "px-0",
-                  )}
-                  title="Logout"
-                >
-                  <LogOut className="h-4 w-4" />
-                  {!collapsed ? "Logout" : null}
-                </Button>
-              </form>
+              <a
+                href="/admin/logout"
+                className={cn(
+                  "mt-3 inline-flex w-full items-center justify-center gap-2",
+                  "rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white",
+                  "shadow-sm transition-colors hover:bg-white/15",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
+                  collapsed && "px-0",
+                )}
+                title="Logout"
+              >
+                <LogOut className="h-4 w-4" />
+                {!collapsed ? "Logout" : null}
+              </a>
             </div>
           </div>
         </aside>
@@ -221,16 +220,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 </p>
               </div>
             </div>
-            <form action={logoutAdminAction} className="relative z-10 lg:hidden">
-              <Button
-                type="submit"
-                variant="outline"
-                className="border-white/20 bg-white/10 text-white hover:bg-white/15"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </Button>
-            </form>
+            <a
+              href="/admin/logout"
+              className="relative z-10 inline-flex items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-white/15 lg:hidden"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </a>
           </header>
           <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
         </section>

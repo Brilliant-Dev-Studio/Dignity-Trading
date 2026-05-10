@@ -8,4 +8,7 @@ export type BlogDraft = {
   tags: string;
   contentHtml: string;
   contentText: string;
+  category?: string;
+  /** When set, saves publish to this post instead of creating a new one */
+  postId?: string;
 };

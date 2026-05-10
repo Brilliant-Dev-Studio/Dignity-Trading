@@ -16,6 +16,8 @@ import {
   isAdminAuthenticated,
   loginAdmin,
 } from "@/lib/admin-auth";
+import SubmitLoginButton from "./SubmitLoginButton";
+import ToastFromQuery from "./ToastFromQuery";
 
 type LoginPageProps = {
   searchParams: Promise<{ error?: string | string[] }>;
@@ -91,6 +93,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <ToastFromQuery />
               <form action={loginAdmin} className="space-y-4">
                 {hasError ? (
                   <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -122,9 +125,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
                   />
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
+                <SubmitLoginButton />
               </form>
 
               {loginHint ? (
