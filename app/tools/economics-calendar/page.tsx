@@ -22,7 +22,7 @@ export default function EconomicsCalendarPage() {
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-56 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0)_100%)]"
       />
 
-      <div className="relative z-10 mx-auto w-[85%] max-w-none px-4 py-16 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-12 sm:w-[85%] sm:px-6 sm:py-16 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
           Forex Tools
         </p>
@@ -51,7 +51,7 @@ export default function EconomicsCalendarPage() {
             </div>
           </div>
 
-          <div className="h-[70vh] min-h-[560px] w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
+          <div className="h-[75dvh] min-h-[520px] w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10 sm:h-[70vh] sm:min-h-[560px]">
             <DukascopyEconomicCalendar
               borderColor="#D92626"
               timezone={0}

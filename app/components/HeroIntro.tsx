@@ -155,7 +155,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         ],
       },
       { label: "Blog", href: "/blog" },
-      { label: "Testimonial", href: "/#testimonial" },
+      { label: "Testimonial", href: "/testimonials" },
       { label: "Open Trading Account", href: "/#open-account" },
       { label: "Contact", href: "/contact" },
       { label: "Disclaimer", href: "/#disclaimer" },
@@ -448,6 +448,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
   const stickyHeader = (
     <div
       ref={headerRef}
+      data-cursor-no-sticky
       className={[
         // Use the app's default font to avoid remote font fetches.
         "fixed left-0 right-0 top-0 z-[1000]",
@@ -457,8 +458,8 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         isScrolled ? "pb-3 sm:pb-4" : "",
         // Glass background after scrolling a bit.
         isScrolled
-          ? "bg-black/55 backdrop-blur-xl shadow-[0_18px_55px_rgba(0,0,0,0.55)] ring-1 ring-white/12"
-          : "bg-transparent",
+          ? "border-b border-white/[0.05] bg-black/55 backdrop-blur-xl shadow-[0_18px_55px_rgba(0,0,0,0.55)]"
+          : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
       {headerContent}
@@ -476,7 +477,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
   return (
     <section
       id="home"
-      className="font-hero relative isolate min-h-dvh w-full overflow-hidden rounded-b-[64px] bg-black sm:rounded-b-[84px] lg:rounded-b-[110px]"
+      className="font-sans relative isolate min-h-dvh w-full overflow-hidden rounded-b-[28px] bg-black sm:rounded-b-[40px] lg:rounded-b-[52px]"
     >
       <video
         ref={heroVideoRef}

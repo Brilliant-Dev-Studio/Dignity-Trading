@@ -22,7 +22,7 @@ export default function PipCalculatorPage() {
         className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-56 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0)_100%)]"
       />
 
-      <div className="relative z-10 mx-auto w-[85%] max-w-none px-4 py-16 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-12 sm:w-[85%] sm:px-6 sm:py-16 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
           Forex Tools
         </p>
@@ -40,11 +40,9 @@ export default function PipCalculatorPage() {
         </p>
 
         <div className="mt-10 grid gap-4">
-          <div className="flex justify-center">
-            <div className="w-full max-w-[440px] overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-              <div className="min-h-[300px] w-full">
-                <DukascopyPipCalculator className="h-full w-full" height={300} width={420} />
-              </div>
+          <div className="mx-auto w-full max-w-[520px] overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
+            <div className="min-h-[340px] w-full sm:min-h-[300px]">
+              <DukascopyPipCalculator className="h-full w-full" height="100%" width="100%" />
             </div>
           </div>
 

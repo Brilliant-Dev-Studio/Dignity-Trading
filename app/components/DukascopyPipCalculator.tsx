@@ -8,7 +8,7 @@ type DukascopyPipCalculatorProps = {
 
 export default function DukascopyPipCalculator({
   height = 300,
-  width = 420,
+  width = "100%",
   className,
 }: DukascopyPipCalculatorProps) {
   const params = new URLSearchParams();

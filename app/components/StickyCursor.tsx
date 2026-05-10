@@ -52,6 +52,8 @@ export default function StickyCursor() {
     const isStickyTarget = (el: Element | null) => {
       if (!el) return null;
       if (shouldDisableForTarget(el)) return null;
+      // Skip primary nav / headers: sticky ring + glow reads as noisy over dense menus.
+      if (el.closest("header,[data-cursor-no-sticky]")) return null;
       return (
         (el.closest(
           'a,button,[role="button"],[data-cursor-sticky]',

@@ -10,7 +10,7 @@ import Reveal from "./components/Reveal";
 import StaggerIn, { FadeUpItem } from "./components/StaggerIn";
 import { cn } from "@/lib/utils";
 
-const CHART_PREVIEW = "/chartBgRemove.png";
+const CHART_PREVIEW = "/chartBgRemoved.png";
 
 const tradingCardShell =
   "relative overflow-hidden rounded-[28px] border border-white/12 bg-zinc-950/85 shadow-[0_24px_80px_rgba(0,0,0,0.55)]";
@@ -32,6 +32,8 @@ function RedGreenBars({
       <style>
         {`
           .bar { transform-box: fill-box; transform-origin: center bottom; }
+          .bar-primary-a { fill: var(--brand-400); }
+          .bar-primary-b { fill: var(--brand-700); }
           @keyframes barsPulse { 0% { transform: scaleY(0.22); opacity: 0.55; } 55% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(0.42); opacity: 0.75; } }
           #bar-1 { animation: barsPulse 6.5s ease-in-out infinite; animation-delay: 0ms; }
           #bar-2 { animation: barsPulse 6.5s ease-in-out infinite; animation-delay: 260ms; }
@@ -47,16 +49,16 @@ function RedGreenBars({
       </style>
 
       <g id="crypto-chart-bars">
-        <rect id="bar-1" className="bar" x="70" y="210" width="34" height="145" rx="10" fill="#22C55E" />
-        <rect id="bar-2" className="bar" x="120" y="175" width="34" height="180" rx="10" fill="#EF4444" />
-        <rect id="bar-3" className="bar" x="170" y="235" width="34" height="120" rx="10" fill="#22C55E" />
-        <rect id="bar-4" className="bar" x="240" y="140" width="34" height="215" rx="10" fill="#EF4444" />
-        <rect id="bar-5" className="bar" x="290" y="95" width="34" height="260" rx="10" fill="#22C55E" />
-        <rect id="bar-6" className="bar" x="340" y="160" width="34" height="195" rx="10" fill="#EF4444" />
-        <rect id="bar-7" className="bar" x="410" y="120" width="34" height="235" rx="10" fill="#22C55E" />
-        <rect id="bar-8" className="bar" x="460" y="70" width="34" height="285" rx="10" fill="#EF4444" />
-        <rect id="bar-9" className="bar" x="510" y="150" width="34" height="205" rx="10" fill="#22C55E" />
-        <rect id="bar-10" className="bar" x="580" y="260" width="34" height="95" rx="10" fill="#EF4444" />
+        <rect id="bar-1" className="bar bar-primary-a" x="70" y="210" width="34" height="145" rx="10" />
+        <rect id="bar-2" className="bar bar-primary-b" x="120" y="175" width="34" height="180" rx="10" />
+        <rect id="bar-3" className="bar bar-primary-a" x="170" y="235" width="34" height="120" rx="10" />
+        <rect id="bar-4" className="bar bar-primary-b" x="240" y="140" width="34" height="215" rx="10" />
+        <rect id="bar-5" className="bar bar-primary-a" x="290" y="95" width="34" height="260" rx="10" />
+        <rect id="bar-6" className="bar bar-primary-b" x="340" y="160" width="34" height="195" rx="10" />
+        <rect id="bar-7" className="bar bar-primary-a" x="410" y="120" width="34" height="235" rx="10" />
+        <rect id="bar-8" className="bar bar-primary-b" x="460" y="70" width="34" height="285" rx="10" />
+        <rect id="bar-9" className="bar bar-primary-a" x="510" y="150" width="34" height="205" rx="10" />
+        <rect id="bar-10" className="bar bar-primary-b" x="580" y="260" width="34" height="95" rx="10" />
       </g>
     </svg>
   );
@@ -87,12 +89,12 @@ function TradingFeatureCard({
 
   const gradClass =
     variant === 0
-      ? "bg-[radial-gradient(900px_520px_at_18%_30%,rgba(34,197,94,0.22),transparent_62%),radial-gradient(820px_560px_at_86%_78%,rgba(239,68,68,0.18),transparent_64%),linear-gradient(135deg,rgba(34,197,94,0.10),rgba(0,0,0,0.55)_52%,rgba(239,68,68,0.08)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.68))]"
+      ? "bg-[radial-gradient(900px_520px_at_18%_30%,color-mix(in_oklab,var(--brand-400)_26%,transparent),transparent_62%),radial-gradient(820px_560px_at_86%_78%,color-mix(in_oklab,var(--brand-700)_22%,transparent),transparent_64%),linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_12%,transparent),rgba(0,0,0,0.55)_52%,color-mix(in_oklab,var(--brand-700)_10%,transparent)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.68))]"
       : variant === 1
-        ? "bg-[radial-gradient(900px_520px_at_22%_70%,rgba(239,68,68,0.22),transparent_62%),radial-gradient(820px_560px_at_82%_22%,rgba(34,197,94,0.18),transparent_64%),linear-gradient(135deg,rgba(239,68,68,0.10),rgba(0,0,0,0.55)_52%,rgba(34,197,94,0.08)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.68))]"
+        ? "bg-[radial-gradient(900px_520px_at_22%_70%,color-mix(in_oklab,var(--brand-700)_24%,transparent),transparent_62%),radial-gradient(820px_560px_at_82%_22%,color-mix(in_oklab,var(--brand-400)_22%,transparent),transparent_64%),linear-gradient(135deg,color-mix(in_oklab,var(--brand-700)_10%,transparent),rgba(0,0,0,0.55)_52%,color-mix(in_oklab,var(--brand-400)_10%,transparent)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.68))]"
         : variant === 2
-          ? "bg-[radial-gradient(900px_520px_at_65%_28%,rgba(34,197,94,0.18),transparent_62%),radial-gradient(820px_560px_at_28%_80%,rgba(239,68,68,0.18),transparent_64%),linear-gradient(135deg,rgba(34,197,94,0.08),rgba(0,0,0,0.58)_52%,rgba(239,68,68,0.06)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.70))]"
-          : "bg-[radial-gradient(900px_520px_at_50%_18%,rgba(239,68,68,0.18),transparent_62%),radial-gradient(820px_560px_at_50%_86%,rgba(34,197,94,0.16),transparent_64%),linear-gradient(135deg,rgba(239,68,68,0.08),rgba(0,0,0,0.58)_52%,rgba(34,197,94,0.06)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.70))]";
+          ? "bg-[radial-gradient(900px_520px_at_65%_28%,color-mix(in_oklab,var(--brand-400)_22%,transparent),transparent_62%),radial-gradient(820px_560px_at_28%_80%,color-mix(in_oklab,var(--brand-700)_20%,transparent),transparent_64%),linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_10%,transparent),rgba(0,0,0,0.58)_52%,color-mix(in_oklab,var(--brand-700)_8%,transparent)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.70))]"
+          : "bg-[radial-gradient(900px_520px_at_50%_18%,color-mix(in_oklab,var(--brand-700)_20%,transparent),transparent_62%),radial-gradient(820px_560px_at_50%_86%,color-mix(in_oklab,var(--brand-400)_18%,transparent),transparent_64%),linear-gradient(135deg,color-mix(in_oklab,var(--brand-700)_8%,transparent),rgba(0,0,0,0.58)_52%,color-mix(in_oklab,var(--brand-400)_8%,transparent)),linear-gradient(to_bottom,rgba(0,0,0,0.06),rgba(0,0,0,0.70))]";
 
   const barsClass =
     variant === 0
@@ -122,7 +124,7 @@ function TradingFeatureCard({
       />
 
       {/* Card background: red/green bars animation (behind content) */}
-      <div className="pointer-events-none absolute inset-0 z-[1] opacity-70">
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-90 [filter:saturate(1.25)_contrast(1.15)]">
         <RedGreenBars className={cn("absolute inset-0 h-full w-full", barsClass)} />
         {/* Fade so text stays readable */}
         <div
@@ -280,7 +282,7 @@ export default function Home() {
                   />
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_20%_18%,rgba(84,168,230,0.18),transparent_62%),radial-gradient(520px_280px_at_84%_78%,rgba(255,190,55,0.10),transparent_66%)]"
+                    className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_20%_18%,rgba(84,168,230,0.18),transparent_62%),radial-gradient(520px_280px_at_84%_78%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_66%)]"
                   />
                   <div className="relative z-[2]">
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
@@ -376,7 +378,7 @@ export default function Home() {
                   />
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,rgba(255,190,55,0.10),transparent_66%)]"
+                    className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_66%)]"
                   />
                   <div className="relative z-[2]">
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
@@ -480,7 +482,7 @@ export default function Home() {
                     />
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,rgba(255,190,55,0.10),transparent_66%)]"
+                      className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_66%)]"
                     />
                     <div className="relative z-[2]">
                       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
@@ -588,7 +590,7 @@ export default function Home() {
                     />
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,rgba(255,190,55,0.10),transparent_66%)]"
+                    className="pointer-events-none absolute inset-0 z-[1] rounded-3xl [background-image:radial-gradient(520px_280px_at_18%_18%,rgba(84,168,230,0.16),transparent_62%),radial-gradient(520px_280px_at_84%_78%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_66%)]"
                     />
                     <div className="relative z-[2]">
                       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">

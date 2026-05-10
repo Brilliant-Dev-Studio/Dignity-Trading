@@ -24,7 +24,7 @@ export default function ChartsPage() {
         className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-56 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0)_100%)]"
       />
 
-      <div className="relative z-10 mx-auto w-[85%] max-w-none px-4 py-16 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-[97%] max-w-none px-4 py-12 sm:w-[85%] sm:px-6 sm:py-16 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
           Forex Tools
         </p>
@@ -43,19 +43,19 @@ export default function ChartsPage() {
 
         <div className="mt-10 grid gap-4">
           <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="h-[70vh] min-h-[560px] w-full">
+            <div className="h-[75dvh] min-h-[520px] w-full sm:h-[70vh] sm:min-h-[560px]">
               <TradingViewAdvancedChart className="h-full w-full" />
             </div>
           </div>
 
           <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="h-[56vh] min-h-[460px] w-full">
+            <div className="h-[60dvh] min-h-[420px] w-full sm:h-[56vh] sm:min-h-[460px]">
               <TradingViewSymbolOverview className="h-full w-full" />
             </div>
           </div>
 
           <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="h-[320px] w-full">
+            <div className="h-[420px] w-full sm:h-[320px]">
               <TradingViewMarketSummary className="h-full w-full" direction="horizontal" />
             </div>
           </div>
