@@ -11,7 +11,7 @@ export default function LenisProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     // Use native scrolling for content-heavy pages where Lenis can feel "sticky" at bounds.
-    if (pathname?.startsWith("/admin") || pathname?.startsWith("/blog")) {
+    if (pathname?.startsWith("/admin")) {
       return;
     }
 
@@ -27,6 +27,20 @@ export default function LenisProvider({ children }: PropsWithChildren) {
       syncTouch: false,
     });
     lenisRef.current = lenis;
+
+    // Content-heavy pages often change height after hydration/data-fetch.
+    // Keep Lenis scroll limits in sync with DOM size.
+    let resizeRaf = 0;
+    const scheduleResize = () => {
+      if (resizeRaf) return;
+      resizeRaf = window.requestAnimationFrame(() => {
+        resizeRaf = 0;
+        lenis.resize();
+      });
+    };
+    const ro = new ResizeObserver(scheduleResize);
+    ro.observe(document.body);
+    window.addEventListener("resize", scheduleResize, { passive: true });
 
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented) return;
@@ -58,6 +72,9 @@ export default function LenisProvider({ children }: PropsWithChildren) {
 
     return () => {
       window.removeEventListener("click", onClick);
+      window.removeEventListener("resize", scheduleResize);
+      ro.disconnect();
+      if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
       lenisRef.current?.destroy();
