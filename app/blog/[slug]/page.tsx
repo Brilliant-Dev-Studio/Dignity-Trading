@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { ArrowLeft } from "lucide-react";
 import { enhanceBlogContentForDisplay } from "@/lib/blog-html";
 import { prisma } from "@/lib/prisma";
@@ -11,8 +12,8 @@ const contentProseClass = [
   "blog-post-body max-w-none",
   "[&_a]:text-[var(--brand-400)] [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-white",
   "[&_p]:mb-4 [&_p]:text-base [&_p]:leading-7 [&_p]:text-white/82",
-  "[&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white",
-  "[&_h3]:mb-2 [&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-white",
+  "[&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:leading-snug [&_h2]:tracking-tight [&_h2]:text-white",
+  "[&_h3]:mb-2 [&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:leading-snug [&_h3]:text-white",
   "[&_ul]:my-4 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-6 [&_ul]:text-white/80",
   "[&_ol]:my-4 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-6 [&_ol]:text-white/80",
   "[&_li]:pl-1",
@@ -69,9 +70,15 @@ export default async function PublicBlogPostPage({ params }: Props) {
 
   if (!post) notFound();
 
-  await prisma.post.update({
-    where: { id: post.id },
-    data: { reads: { increment: 1 } },
+  after(async () => {
+    try {
+      await prisma.post.update({
+        where: { id: post.id },
+        data: { reads: { increment: 1 } },
+      });
+    } catch {
+      // ignore read-counter failures (e.g. DB hiccup)
+    }
   });
 
   const tagList = post.tags
@@ -85,13 +92,14 @@ export default async function PublicBlogPostPage({ params }: Props) {
   });
 
   return (
-    <BlogPageChrome containerClassName="py-6 sm:py-8">
+    <BlogPageChrome lite containerClassName="py-6 sm:py-8">
       <nav
         aria-label="Article navigation"
         className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 border-b border-white/[0.08] pb-3 text-sm"
       >
         <Link
           href="/blog"
+          prefetch
           className="inline-flex items-center gap-1.5 text-white/65 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_45%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden />
@@ -121,7 +129,9 @@ export default async function PublicBlogPostPage({ params }: Props) {
           Blog
         </p>
         <div className="mt-2 inline-flex flex-col">
-          <h1 className={`text-3xl font-semibold tracking-tight sm:text-4xl ${blogChromeTitleClass}`}>
+          <h1
+            className={`text-3xl font-semibold leading-[1.3] tracking-tight sm:text-4xl sm:leading-[1.28] ${blogChromeTitleClass} max-w-[100%] pb-0.5 text-balance`}
+          >
             {post.title}
           </h1>
           <span
@@ -172,6 +182,8 @@ export default async function PublicBlogPostPage({ params }: Props) {
               src={post.coverUrl}
               alt=""
               className="aspect-[16/9] w-full object-cover"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
         ) : null}

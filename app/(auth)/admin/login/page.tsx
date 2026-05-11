@@ -31,6 +31,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const hasError = params.error === "invalid";
   const loginHint = getAdminLoginHint();
+  const missingProdPassword =
+    process.env.NODE_ENV === "production" && !process.env.ADMIN_PASSWORD;
 
   return (
     <main className="min-h-dvh bg-zinc-950 text-zinc-950">
@@ -94,6 +96,28 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
             </CardHeader>
             <CardContent>
               <ToastFromQuery />
+              {missingProdPassword ? (
+                <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                  <p className="font-medium">Admin password is not set on this server.</p>
+                  <p className="mt-1 text-xs leading-5 text-amber-800/90">
+                    In Vercel → Project → Settings → Environment Variables, add{" "}
+                    <code className="rounded bg-amber-100/80 px-1 py-0.5 font-mono text-[11px]">
+                      ADMIN_PASSWORD
+                    </code>{" "}
+                    (and optionally{" "}
+                    <code className="rounded bg-amber-100/80 px-1 py-0.5 font-mono text-[11px]">
+                      ADMIN_EMAIL
+                    </code>
+                    ,{" "}
+                    <code className="rounded bg-amber-100/80 px-1 py-0.5 font-mono text-[11px]">
+                      ADMIN_AUTH_SECRET
+                    </code>
+                    ), then redeploy. Local demo password{" "}
+                    <code className="font-mono text-[11px]">admin12345</code> is{" "}
+                    <strong>not</strong> used in production unless you set it there.
+                  </p>
+                </div>
+              ) : null}
               <form action={loginAdmin} className="space-y-4">
                 {hasError ? (
                   <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

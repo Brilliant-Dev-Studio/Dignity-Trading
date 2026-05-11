@@ -7,22 +7,28 @@ import { cn } from "@/lib/utils";
 export default function BlogPageChrome({
   children,
   containerClassName,
+  lite = false,
 }: {
   children: ReactNode;
   containerClassName?: string;
+  /** Fewer animated layers + fewer coins for faster paint on blog routes. */
+  lite?: boolean;
 }) {
   return (
     <main className="relative isolate min-h-dvh overflow-hidden bg-black text-white">
       <FloatingCoinsBackground
         className="-z-10 opacity-100"
-        count={5}
+        count={lite ? 2 : 5}
         showGradient={false}
-        opacityMin={0.12}
-        opacityMax={0.28}
+        opacityMin={lite ? 0.1 : 0.12}
+        opacityMax={lite ? 0.22 : 0.28}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 opacity-100 [background-image:radial-gradient(1100px_520px_at_18%_22%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_62%),radial-gradient(980px_620px_at_86%_78%,color-mix(in_oklab,var(--brand-700)_22%,transparent),transparent_68%),radial-gradient(820px_460px_at_55%_12%,color-mix(in_oklab,var(--brand-600)_14%,transparent),transparent_70%),radial-gradient(900px_560px_at_90%_26%,rgba(255,190,55,0.24),transparent_58%),radial-gradient(760px_520px_at_12%_78%,rgba(251,146,60,0.16),transparent_62%),radial-gradient(640px_420px_at_48%_48%,rgba(253,186,116,0.10),transparent_68%)] blur-2xl"
+        className={[
+          "pointer-events-none absolute inset-0 -z-20 opacity-100 [background-image:radial-gradient(1100px_520px_at_18%_22%,color-mix(in_oklab,var(--brand-400)_28%,transparent),transparent_62%),radial-gradient(980px_620px_at_86%_78%,color-mix(in_oklab,var(--brand-700)_22%,transparent),transparent_68%),radial-gradient(820px_460px_at_55%_12%,color-mix(in_oklab,var(--brand-600)_14%,transparent),transparent_70%),radial-gradient(900px_560px_at_90%_26%,rgba(255,190,55,0.24),transparent_58%),radial-gradient(760px_520px_at_12%_78%,rgba(251,146,60,0.16),transparent_62%),radial-gradient(640px_420px_at_48%_48%,rgba(253,186,116,0.10),transparent_68%)]",
+          lite ? "blur-lg" : "blur-2xl",
+        ].join(" ")}
       />
       <div
         aria-hidden="true"
@@ -34,7 +40,10 @@ export default function BlogPageChrome({
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.26] [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:14px_14px]"
+        className={[
+          "pointer-events-none absolute inset-0 -z-10 [background-image:radial-gradient(rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:14px_14px]",
+          lite ? "opacity-[0.14]" : "opacity-[0.26]",
+        ].join(" ")}
       />
       <div
         className={cn(

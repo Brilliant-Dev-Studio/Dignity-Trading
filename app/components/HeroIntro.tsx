@@ -30,7 +30,6 @@ const buttonAppear = {
 };
 
 export default function HeroIntro({ showHeader = true }: { showHeader?: boolean }) {
-  const [step, setStep] = useState(0);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
@@ -38,21 +37,8 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
   const [isScrolled, setIsScrolled] = useState(false);
   const [parallax, setParallax] = useState({ p: 0, vh: 0 });
   const headerRef = useRef<HTMLDivElement | null>(null);
-  const didBootRef = useRef(false);
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const canPortal = typeof document !== "undefined";
-
-  useEffect(() => {
-    // Prevent double-running in React StrictMode dev, which can cause animation flicker.
-    if (didBootRef.current) return;
-    didBootRef.current = true;
-
-    // Kick off immediately so hero text doesn't lag.
-    const t = window.setTimeout(() => setStep(5), 0);
-    return () => {
-      window.clearTimeout(t);
-    };
-  }, []);
 
   useEffect(() => {
     const measure = () => {
@@ -179,7 +165,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
           className="flex items-center gap-3 justify-self-start shrink-0"
           variants={appear}
           initial="hidden"
-          animate={step >= 1 ? "show" : "hidden"}
+          animate="show"
           transition={softTransition}
         >
           <div className="grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-white/8 ring-1 ring-white/10 sm:h-9 sm:w-9">
@@ -203,7 +189,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
           className="hidden justify-self-center md:block min-w-0"
           variants={appear}
           initial="hidden"
-          animate={step >= 2 ? "show" : "hidden"}
+          animate="show"
           transition={softTransition}
         >
           <div
@@ -221,7 +207,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                     key={item.label}
                     className={[
                       "group relative hero-nav-item",
-                      step >= 2 ? "is-in" : "",
+                      "is-in",
                     ].join(" ")}
                     style={{ ["--i" as any]: idx }}
                   >
@@ -278,7 +264,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                     className={[
                       `inline-flex ${headerRowH} cursor-pointer items-center rounded-full px-4 text-xs font-medium text-white/80 transition hover:bg-white/10 hover:text-white`,
                       "hero-nav-item",
-                      step >= 2 ? "is-in" : "",
+                      "is-in",
                     ].join(" ")}
                     style={{ ["--i" as any]: idx }}
                   >
@@ -294,7 +280,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
           className="justify-self-end shrink-0"
           variants={appear}
           initial="hidden"
-          animate={step >= 3 ? "show" : "hidden"}
+          animate="show"
           transition={softTransition}
         >
           <button
@@ -466,7 +452,6 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
     </div>
   );
 
-  const heroStart = step >= 5;
   const p = parallax.p;
   const textY = Math.round(p * -46); // move up slightly while scrolling
   const badgeY = Math.round(p * -26);
@@ -486,7 +471,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         style={{
           transform: `translate3d(0, ${mediaY}px, 0) scale(${mediaScale})`,
         }}
@@ -532,7 +517,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               className="mx-auto inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-black/35 px-3.5 py-2 text-xs font-medium text-white/78 backdrop-blur-md sm:px-4 lg:mx-0"
               variants={appear}
               initial="hidden"
-              animate={step >= 4 ? "show" : "hidden"}
+              animate="show"
               transition={softTransition}
               style={{ transform: `translate3d(0, ${badgeY}px, 0)` }}
             >
@@ -543,8 +528,9 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               <BlurText
                 as="span"
                 text="Rules-first trading education"
-                delay={35}
-                start={step >= 4}
+                delay={12}
+                stepDuration={0.22}
+                start
                 animateBy="words"
                 direction="top"
                 className="inline-flex tracking-tight"
@@ -552,56 +538,54 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
             </motion.div>
 
             <div className="mt-6 text-[44px] font-semibold leading-[1.05] tracking-[0.01em] text-white sm:text-6xl">
-              {step >= 5 ? (
-                <>
-                  <span className="inline-flex flex-wrap items-baseline justify-center gap-x-3 lg:justify-start">
-                    <BlurText
-                      as="span"
-                      text="Trade with"
-                      delay={35}
-                      start={heroStart}
-                      animateBy="words"
-                      direction="top"
-                      className="flex-nowrap"
-                    />
-                    <BlurText
-                      as="span"
-                      text="discipline."
-                      delay={35}
-                      start={heroStart}
-                      animateBy="words"
-                      direction="top"
-                      className="bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] bg-clip-text text-transparent"
-                    />
-                  </span>
-                  <span className="inline-block w-2 sm:w-2.5" aria-hidden="true" />
-                  <BlurText
-                    as="span"
-                    text="Build a repeatable system"
-                    delay={35}
-                    start={heroStart}
-                    animateBy="words"
-                    direction="top"
-                    className="justify-center lg:justify-start"
-                  />
-                </>
-              ) : (
-                <span className="opacity-0">Loading</span>
-              )}
+              <span className="inline-flex flex-wrap items-baseline justify-center gap-x-3 lg:justify-start">
+                <BlurText
+                  as="span"
+                  text="Trade with"
+                  delay={12}
+                  stepDuration={0.22}
+                  start
+                  animateBy="words"
+                  direction="top"
+                  className="flex-nowrap"
+                />
+                <BlurText
+                  as="span"
+                  text="discipline."
+                  delay={12}
+                  stepDuration={0.22}
+                  start
+                  animateBy="words"
+                  direction="top"
+                  className="bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] bg-clip-text text-transparent"
+                />
+              </span>
+              <span className="inline-block w-2 sm:w-2.5" aria-hidden="true" />
+              <BlurText
+                as="span"
+                text="Build a repeatable system"
+                delay={12}
+                stepDuration={0.22}
+                start
+                animateBy="words"
+                direction="top"
+                className="justify-center lg:justify-start"
+              />
             </div>
 
             <motion.p
               className="mx-auto mt-5 max-w-lg text-sm leading-6 text-white/70 sm:text-base sm:leading-7 lg:mx-0"
               variants={appear}
               initial="hidden"
-              animate={heroStart ? "show" : "hidden"}
+              animate="show"
               transition={{ duration: 0.8, ease: softEase, delay: 0.14 }}
             >
               <BlurText
                 as="span"
                 text="A structured, rules-first approach to risk, entries, and execution."
-                delay={30}
-                start={heroStart}
+                delay={10}
+                stepDuration={0.2}
+                start
                 animateBy="words"
                 direction="top"
                 className="justify-center lg:justify-start"
@@ -612,7 +596,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
               variants={appear}
               initial="hidden"
-              animate={heroStart ? "show" : "hidden"}
+              animate="show"
               transition={{ duration: 0.8, ease: softEase, delay: 0.22 }}
             >
               <motion.a
@@ -620,7 +604,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] px-5 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(0,0,0,0.35)] shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_18px_60px_color-mix(in_oklab,var(--brand-400)_28%,transparent)] transition hover:brightness-110 active:brightness-105"
                 variants={buttonAppear}
                 initial="hidden"
-                animate={heroStart ? "show" : "hidden"}
+                animate="show"
                 transition={{ duration: 0.85, ease: softEase, delay: 0.28 }}
                 whileHover={{ scale: 1.015 }}
                 whileTap={{ scale: 0.995 }}
@@ -628,8 +612,9 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 <BlurText
                   as="span"
                   text="Join the free class"
-                  delay={30}
-                  start={heroStart}
+                  delay={10}
+                  stepDuration={0.2}
+                  start
                   animateBy="words"
                   direction="top"
                 />
@@ -639,7 +624,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 className="inline-flex h-11 items-center justify-center rounded-full bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 backdrop-blur transition hover:bg-white/14 hover:ring-white/25"
                 variants={buttonAppear}
                 initial="hidden"
-                animate={heroStart ? "show" : "hidden"}
+                animate="show"
                 transition={{ duration: 0.85, ease: softEase, delay: 0.34 }}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.995 }}
@@ -647,8 +632,9 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 <BlurText
                   as="span"
                   text="View the program"
-                  delay={30}
-                  start={heroStart}
+                  delay={10}
+                  stepDuration={0.2}
+                  start
                   animateBy="words"
                   direction="top"
                 />

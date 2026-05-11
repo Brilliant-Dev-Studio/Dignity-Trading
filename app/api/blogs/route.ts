@@ -1,24 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPublishedBlogPosts } from "@/lib/blog-public";
 
 export async function GET() {
-  const posts = await prisma.post.findMany({
-    where: { status: "PUBLISHED" },
-    orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      subtitle: true,
-      author: true,
-      category: true,
-      coverUrl: true,
-      tags: true,
-      publishedAt: true,
-      updatedAt: true,
-    },
-  });
-
+  const posts = await getPublishedBlogPosts();
   return NextResponse.json({ posts });
 }
 
