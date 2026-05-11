@@ -156,9 +156,9 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
       },
       { label: "Blog", href: "/blog" },
       { label: "Testimonial", href: "/testimonials" },
-      { label: "Open Trading Account", href: "/#open-account" },
+      { label: "Open Trading Account", href: "/open-trading-account" },
       { label: "Contact", href: "/contact" },
-      { label: "Disclaimer", href: "/#disclaimer" },
+      { label: "Disclaimer", href: "/disclaimer" },
     ],
     [],
   );

@@ -161,6 +161,13 @@ export default function Footer() {
             Back to top
           </a>
         </div>
+
+        <p className="mt-6 max-w-4xl text-[11px] leading-5 text-white/45">
+          <span className="font-semibold text-white/55">Risk Disclaimer:</span> Forex trading
+          involves high risk. All content on this website is for educational purposes only and is
+          not financial advice. We do not guarantee profits or results. Trade only with money you
+          can afford to lose.
+        </p>
       </div>
     </footer>
   );

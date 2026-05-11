@@ -389,7 +389,12 @@ export default function BlogListPage() {
                       )}
                     </td>
                     <td className="px-5 py-4">
-                      <div className="font-medium text-zinc-950">{blog.title}</div>
+                      <div
+                        className="max-w-[420px] truncate font-medium text-zinc-950"
+                        title={blog.title}
+                      >
+                        {blog.title}
+                      </div>
                       <div className="mt-1 text-xs text-zinc-500">
                         By {blog.author}
                       </div>

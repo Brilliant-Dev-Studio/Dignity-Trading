@@ -133,38 +133,55 @@ export default function FloatingCoinsBackground({
             }}
           >
             <div
-              className="coinFloat"
+              className="coinDrift"
               style={
                 {
-                  ["--floatDuration" as any]: `${coin.floatDurationMs}ms`,
-                  ["--floatDelay" as any]: `${coin.floatDelayMs}ms`,
                   ["--driftDuration" as any]: `${coin.driftDurationMs}ms`,
                   ["--driftDelay" as any]: `${coin.driftDelayMs}ms`,
-                  opacity: coin.opacity,
-                  filter: "saturate(1.12) contrast(1.05)",
-                  transform: `rotate(${coin.rotateDeg}deg)`,
                 } as CSSProperties
               }
             >
-              <Image
-                src={coin.src}
-                alt=""
-                width={coin.size}
-                height={coin.size}
-                className="rounded-full object-contain drop-shadow-[0_22px_60px_rgba(0,0,0,0.68)]"
-                sizes={`${coin.size}px`}
-                priority={false}
-              />
+              <div
+                className="coinFloat"
+                style={
+                  {
+                    ["--floatDuration" as any]: `${coin.floatDurationMs}ms`,
+                    ["--floatDelay" as any]: `${coin.floatDelayMs}ms`,
+                    opacity: coin.opacity,
+                    filter: "saturate(1.12) contrast(1.05)",
+                  } as CSSProperties
+                }
+              >
+                <Image
+                  src={coin.src}
+                  alt=""
+                  width={coin.size}
+                  height={coin.size}
+                  className="rounded-full object-contain drop-shadow-[0_22px_60px_rgba(0,0,0,0.68)]"
+                  sizes={`${coin.size}px`}
+                  priority={false}
+                  style={{ transform: `rotate(${coin.rotateDeg}deg)` }}
+                />
+              </div>
             </div>
           </div>
         );
       })}
 
       <style jsx>{`
+        .coinDrift {
+          will-change: transform;
+          transform: translateZ(0);
+          animation: coinDriftX var(--driftDuration) ease-in-out var(--driftDelay)
+            infinite;
+        }
+
         .coinFloat {
+          will-change: transform;
+          transform: translateZ(0);
           animation:
             coinFloatY var(--floatDuration) ease-in-out var(--floatDelay) infinite,
-            coinDriftX var(--driftDuration) ease-in-out var(--driftDelay) infinite;
+            none;
         }
 
         @keyframes coinFloatY {
@@ -181,13 +198,13 @@ export default function FloatingCoinsBackground({
 
         @keyframes coinDriftX {
           0% {
-            margin-left: 0px;
+            transform: translate3d(0px, 0, 0);
           }
           50% {
-            margin-left: 18px;
+            transform: translate3d(18px, 0, 0);
           }
           100% {
-            margin-left: 0px;
+            transform: translate3d(0px, 0, 0);
           }
         }
       `}</style>

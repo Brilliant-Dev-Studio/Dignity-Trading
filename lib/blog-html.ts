@@ -84,6 +84,21 @@ function replaceYoutubeIframes(html: string): string {
   );
 }
 
+function wrapTablesForDisplay(html: string): string {
+  if (!html.includes("<table")) return html;
+  // Avoid double-wrapping.
+  if (html.includes("blog-table-wrap")) return html;
+
+  return html.replace(/<table\b[\s\S]*?<\/table>/gi, (table) => {
+    return [
+      '<div class="blog-table-wrap my-6 w-full overflow-x-auto rounded-2xl ring-1 ring-white/12 bg-white/[0.03]">',
+      '<div class="min-w-full p-2">',
+      table,
+      "</div></div>",
+    ].join("");
+  });
+}
+
 /** Single-line embed URL inside a paragraph (no iframe). */
 function upgradeBareYoutubeEmbedParagraphs(html: string): string {
   return html.replace(
@@ -116,5 +131,6 @@ export function enhanceBlogContentForDisplay(
   out = replaceYoutubeIframes(out);
   out = upgradeBareYoutubeEmbedParagraphs(out);
   out = appendDefaultYoutubeIfMissing(out, options?.slug);
+  out = wrapTablesForDisplay(out);
   return out;
 }

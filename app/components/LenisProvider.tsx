@@ -10,11 +10,13 @@ export default function LenisProvider({ children }: PropsWithChildren) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    if (pathname?.startsWith("/admin")) {
+    // Use native scrolling for content-heavy pages where Lenis can feel "sticky" at bounds.
+    if (pathname?.startsWith("/admin") || pathname?.startsWith("/blog")) {
       return;
     }
 
     // Avoid native smooth scroll fighting Lenis (we still smooth-scroll anchors via Lenis).
+    const prevScrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = "auto";
 
     const lenis = new Lenis({
@@ -60,6 +62,7 @@ export default function LenisProvider({ children }: PropsWithChildren) {
       rafIdRef.current = null;
       lenisRef.current?.destroy();
       lenisRef.current = null;
+      document.documentElement.style.scrollBehavior = prevScrollBehavior;
     };
   }, [pathname]);
 

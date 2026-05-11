@@ -78,7 +78,9 @@ function BlogPostCardSkeleton() {
           <SkeletonBlock className="h-6 w-14 rounded-full" />
           <SkeletonBlock className="h-6 w-20 rounded-full" />
         </div>
-        <SkeletonBlock className="mt-auto mt-5 h-4 w-24 rounded-md" />
+        <div className="mt-auto pt-5">
+          <SkeletonBlock className="h-4 w-24 rounded-md" />
+        </div>
       </div>
     </article>
   );
@@ -249,7 +251,9 @@ export default function PublicBlogPage() {
           Blog
         </p>
         <div className="mt-4 inline-flex flex-col">
-          <h1 className={`text-4xl font-semibold tracking-tight sm:text-5xl ${blogChromeTitleClass}`}>
+          <h1
+            className={`text-4xl font-semibold leading-[1.22] tracking-tight sm:text-5xl sm:leading-[1.22] ${blogChromeTitleClass} pb-1`}
+          >
             Calm, useful trading notes.
           </h1>
           <span

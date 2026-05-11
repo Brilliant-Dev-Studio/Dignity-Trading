@@ -3,6 +3,12 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import type { AdminCreateBlogRequest } from "./createTypes";
 
+function isDbUnreachableError(e: unknown) {
+  if (!e || typeof e !== "object") return false;
+  const anyErr = e as { code?: unknown };
+  return anyErr.code === "P1001";
+}
+
 function formatCompactReads(value: number) {
   if (!Number.isFinite(value) || value <= 0) return "0";
   if (value >= 1_000_000) return `${Math.round((value / 1_000_000) * 10) / 10}m`;
@@ -81,27 +87,60 @@ export async function GET(req: Request) {
       : {}),
   };
 
-  const total = await prisma.post.count({ where });
+  let total: number;
+  try {
+    total = await prisma.post.count({ where });
+  } catch (e) {
+    if (isDbUnreachableError(e)) {
+      return NextResponse.json(
+        { error: "db_unreachable" },
+        { status: 503 },
+      );
+    }
+    throw e;
+  }
+
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(page, totalPages);
 
-  const posts = await prisma.post.findMany({
-    orderBy: [{ updatedAt: "desc" }],
-    where,
-    skip: (safePage - 1) * pageSize,
-    take: pageSize,
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      author: true,
-      category: true,
-      coverUrl: true,
-      reads: true,
-      status: true,
-      updatedAt: true,
-    },
-  });
+  let posts: Array<{
+    id: string;
+    slug: string;
+    title: string;
+    author: string;
+    category: string;
+    coverUrl: string;
+    reads: number;
+    status: "DRAFT" | "REVIEW" | "PUBLISHED";
+    updatedAt: Date;
+  }>;
+  try {
+    posts = await prisma.post.findMany({
+      orderBy: [{ updatedAt: "desc" }],
+      where,
+      skip: (safePage - 1) * pageSize,
+      take: pageSize,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        author: true,
+        category: true,
+        coverUrl: true,
+        reads: true,
+        status: true,
+        updatedAt: true,
+      },
+    });
+  } catch (e) {
+    if (isDbUnreachableError(e)) {
+      return NextResponse.json(
+        { error: "db_unreachable" },
+        { status: 503 },
+      );
+    }
+    throw e;
+  }
 
   return NextResponse.json({
     posts: posts.map((p) => ({
@@ -164,25 +203,53 @@ export async function POST(req: Request) {
   }
 
   const status = body.status ?? "DRAFT";
-  const slug = await createUniqueSlug(title);
+  let slug: string;
+  try {
+    slug = await createUniqueSlug(title);
+  } catch (e) {
+    if (isDbUnreachableError(e)) {
+      return NextResponse.json(
+        { error: "db_unreachable" },
+        { status: 503 },
+      );
+    }
+    throw e;
+  }
   const now = new Date();
 
-  const post = await prisma.post.create({
-    data: {
-      slug,
-      title,
-      subtitle: String(body.subtitle ?? ""),
-      author: String(body.author ?? "Dignity Trading"),
-      category: String(body.category ?? "Education"),
-      coverUrl: String(body.coverUrl ?? ""),
-      tags: String(body.tags ?? ""),
-      contentHtml: String(body.contentHtml ?? ""),
-      contentText: String(body.contentText ?? ""),
-      status,
-      publishedAt: status === "PUBLISHED" ? now : null,
-    },
-    select: { id: true, slug: true, status: true, publishedAt: true, updatedAt: true },
-  });
+  let post: {
+    id: string;
+    slug: string;
+    status: "DRAFT" | "REVIEW" | "PUBLISHED";
+    publishedAt: Date | null;
+    updatedAt: Date;
+  };
+  try {
+    post = await prisma.post.create({
+      data: {
+        slug,
+        title,
+        subtitle: String(body.subtitle ?? ""),
+        author: String(body.author ?? "Dignity Trading"),
+        category: String(body.category ?? "Education"),
+        coverUrl: String(body.coverUrl ?? ""),
+        tags: String(body.tags ?? ""),
+        contentHtml: String(body.contentHtml ?? ""),
+        contentText: String(body.contentText ?? ""),
+        status,
+        publishedAt: status === "PUBLISHED" ? now : null,
+      },
+      select: { id: true, slug: true, status: true, publishedAt: true, updatedAt: true },
+    });
+  } catch (e) {
+    if (isDbUnreachableError(e)) {
+      return NextResponse.json(
+        { error: "db_unreachable" },
+        { status: 503 },
+      );
+    }
+    throw e;
+  }
 
   return NextResponse.json({ post }, { status: 201 });
 }
