@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,6 +15,7 @@ import {
   isAdminAuthenticated,
   loginAdmin,
 } from "@/lib/admin-auth";
+import PasswordField from "./PasswordField";
 import SubmitLoginButton from "./SubmitLoginButton";
 import ToastFromQuery from "./ToastFromQuery";
 
@@ -139,10 +139,9 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
 
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input
+                  <PasswordField
                     id="password"
                     name="password"
-                    type="password"
                     autoComplete="current-password"
                     placeholder="Enter password"
                     required
