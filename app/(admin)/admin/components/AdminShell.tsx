@@ -8,6 +8,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
+  GraduationCap,
+  Layers,
   LayoutDashboard,
   LogOut,
 } from "lucide-react";
@@ -18,6 +20,12 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Blog", href: "/admin/blogs", icon: FileText },
+  { label: "Free Forex course", href: "/admin/courses/forex-free-beginner", icon: GraduationCap },
+  {
+    label: "Intermediate course",
+    href: "/admin/courses/forex-free-intermediate",
+    icon: Layers,
+  },
 ];
 
 const SIDEBAR_COLLAPSED_KEY = "admin-sidebar-collapsed";

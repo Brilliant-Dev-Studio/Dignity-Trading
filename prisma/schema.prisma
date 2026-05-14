@@ -32,3 +32,29 @@ model Post {
 
   @@index([status, publishedAt])
 }
+
+/// CMS-backed copy for public marketing pages (e.g. free Forex course).
+model PublicCourse {
+  id               String   @id @default(cuid())
+  key              String   @unique
+  eyebrow          String   @default("")
+  title            String   @default("")
+  descriptionEn1   String   @default("") @db.Text
+  descriptionEn2   String   @default("") @db.Text
+  descriptionMy1   String   @default("") @db.Text
+  descriptionMy2   String   @default("") @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  lessons PublicCourseLesson[]
+}
+
+model PublicCourseLesson {
+  id        String       @id @default(cuid())
+  courseId  String
+  course    PublicCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sortOrder Int          @default(0)
+  videoUrl  String
+
+  @@index([courseId, sortOrder])
+}

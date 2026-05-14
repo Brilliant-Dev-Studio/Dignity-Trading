@@ -18,7 +18,13 @@ export default function CoursesPage() {
             href="/learn-forex"
             className="inline-flex h-10 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium text-white ring-1 ring-white/15 transition hover:bg-white/15"
           >
-            Learn Forex
+            Learn Forex (beginner)
+          </Link>
+          <Link
+            href="/learn-forex-intermediate"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium text-white ring-1 ring-white/15 transition hover:bg-white/15"
+          >
+            Intermediate course
           </Link>
           <Link
             href="/"

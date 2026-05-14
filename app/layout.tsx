@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import LenisProvider from "./components/LenisProvider";
 import CursorEffects from "./components/CursorEffects";
 import AppFrame from "./components/AppFrame";
 import { Toaster } from "@/components/ui/sonner";
@@ -27,10 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
-        <LenisProvider>
-          <CursorEffects />
-          <AppFrame>{children}</AppFrame>
-        </LenisProvider>
+        <CursorEffects />
+        <AppFrame>{children}</AppFrame>
         <Toaster position="bottom-right" />
       </body>
     </html>

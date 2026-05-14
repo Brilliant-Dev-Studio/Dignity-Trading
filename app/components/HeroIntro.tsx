@@ -124,7 +124,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         href: "/courses",
         children: [
           { label: "Free Forex Beginner Trading Course", href: "/learn-forex" },
-          { label: "Free Intermediate Trading Course", href: "/courses?level=intermediate" },
+          { label: "Free Intermediate Trading Course", href: "/learn-forex-intermediate" },
           { label: "Professional Advance Trading Course", href: "/courses?level=advance" },
         ],
       },
