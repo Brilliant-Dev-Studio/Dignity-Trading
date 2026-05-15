@@ -5,8 +5,35 @@ import AppFrame from "./components/AppFrame";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Dignity Trading",
-  description: "Trade with our capital, keep up to 95% of profits.",
+  title: {
+    default: "Dignity Trading",
+    template: "%s | Dignity Trading",
+  },
+  description:
+    "Rules-first forex trading education and funded trading program. Learn to trade with discipline, build a repeatable system, and grow with Dignity Trading Academy.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dignitytrading.com"),
+  openGraph: {
+    type: "website",
+    siteName: "Dignity Trading",
+    locale: "en_US",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "Dignity Trading",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    images: ["/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
   icons: {
     icon: [
       { url: "/favicon/favicon.ico", sizes: "any" },

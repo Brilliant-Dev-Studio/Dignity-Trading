@@ -3,7 +3,7 @@ import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
 export const metadata: Metadata = {
-  title: "Risk Disclaimer | Dignity Trading",
+  title: "Risk Disclaimer",
   description:
     "Risk disclaimer for Dignity Trading Academy. Educational information only; forex trading involves substantial risk.",
 };

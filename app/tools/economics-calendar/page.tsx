@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DukascopyEconomicCalendar from "@/app/components/DukascopyEconomicCalendar";
+
+export const metadata: Metadata = {
+  title: "Forex Economic Calendar",
+  description:
+    "Live economic calendar powered by Dukascopy. Track high-impact news releases and macro events that move forex markets.",
+  openGraph: {
+    title: "Forex Economic Calendar — Dignity Trading",
+    description: "Stay ahead of market-moving news with a live forex economic calendar.",
+    url: "/tools/economics-calendar",
+  },
+};
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 

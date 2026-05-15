@@ -35,9 +35,9 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
   const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
   const [headerH, setHeaderH] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [parallax, setParallax] = useState({ p: 0, vh: 0 });
   const headerRef = useRef<HTMLDivElement | null>(null);
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+  const textContainerRef = useRef<HTMLDivElement | null>(null);
   const canPortal = typeof document !== "undefined";
 
   useEffect(() => {
@@ -65,7 +65,19 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
     const update = () => {
       const vh = window.innerHeight || 1;
       const p = clamp01(window.scrollY / vh);
-      setParallax({ p, vh });
+
+      const textY = Math.round(p * -46);
+      const mediaY = Math.round(p * 24);
+      const mediaScale = 1 + p * 0.04;
+      const textOpacity = 1 - p * 0.22;
+
+      if (heroVideoRef.current) {
+        heroVideoRef.current.style.transform = `translate3d(0, ${mediaY}px, 0) scale(${mediaScale})`;
+      }
+      if (textContainerRef.current) {
+        textContainerRef.current.style.transform = `translate3d(0, ${textY}px, 0)`;
+        textContainerRef.current.style.opacity = String(textOpacity);
+      }
       raf = 0;
     };
     const onScroll = () => {
@@ -125,7 +137,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         children: [
           { label: "Free Forex Beginner Trading Course", href: "/learn-forex" },
           { label: "Free Intermediate Trading Course", href: "/learn-forex-intermediate" },
-          { label: "Professional Advance Trading Course", href: "/courses?level=advance" },
+          { label: "Professional Advance Trading Course", href: "/learn-forex-advanced" },
         ],
       },
       { label: "Market Anaylsis", href: "/resources" },
@@ -452,13 +464,6 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
     </div>
   );
 
-  const p = parallax.p;
-  const textY = Math.round(p * -46); // move up slightly while scrolling
-  const badgeY = Math.round(p * -26);
-  const mediaY = Math.round(p * 24); // subtle counter-move
-  const mediaScale = 1 + p * 0.04;
-  const textOpacity = 1 - p * 0.22;
-
   return (
     <section
       id="home"
@@ -471,10 +476,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         muted
         loop
         playsInline
-        preload="metadata"
-        style={{
-          transform: `translate3d(0, ${mediaY}px, 0) scale(${mediaScale})`,
-        }}
+        preload="auto"
         onLoadedMetadata={() => {
           // Slow the hero background video slightly for a calmer feel.
           const el = heroVideoRef.current;
@@ -509,8 +511,8 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
           : null}
 
         <div
+          ref={textContainerRef}
           className="grid flex-1 justify-items-center gap-10 pb-14 pt-24 sm:pb-20 sm:pt-10 lg:justify-items-start lg:items-center lg:gap-14 lg:pb-24 lg:pt-14 will-change-transform"
-          style={{ transform: `translate3d(0, ${textY}px, 0)`, opacity: textOpacity }}
         >
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
             <motion.div
@@ -519,7 +521,6 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               initial="hidden"
               animate="show"
               transition={softTransition}
-              style={{ transform: `translate3d(0, ${badgeY}px, 0)` }}
             >
               <span
                 aria-hidden="true"

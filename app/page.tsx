@@ -1,4 +1,19 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Dignity Trading — Trade with Discipline",
+  },
+  description:
+    "Rules-first forex trading education. Learn to trade with discipline, build a repeatable system, and grow with Dignity Trading Academy's structured beginner-to-professional courses.",
+  openGraph: {
+    title: "Dignity Trading — Trade with Discipline",
+    description:
+      "Rules-first forex trading education. Structured courses from beginner to professional level.",
+    url: "/",
+  },
+};
 
 import HeroIntro from "./components/HeroIntro";
 import FloatingCoinsBackground from "./components/FloatingCoinsBackground";

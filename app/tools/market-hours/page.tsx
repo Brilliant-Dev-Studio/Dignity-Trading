@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DukascopyMarketHours from "@/app/components/DukascopyMarketHours";
+
+export const metadata: Metadata = {
+  title: "Forex Market Hours",
+  description:
+    "See live forex market session hours, spreads, and volatility by instrument and timezone. Powered by Dukascopy.",
+  openGraph: {
+    title: "Forex Market Hours — Dignity Trading",
+    description: "Know exactly when each forex session is open, and which pairs are most active.",
+    url: "/tools/market-hours",
+  },
+};
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
@@ -28,9 +40,9 @@ export default function MarketHoursPage() {
         </p>
 
         <div className="mt-10 grid gap-4">
-          <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="min-h-[720px] w-full sm:min-h-[530px]">
-              <DukascopyMarketHours className="h-full w-full" height="100%" />
+          <div className="overflow-x-auto">
+            <div className="inline-block overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
+              <DukascopyMarketHours />
             </div>
           </div>
 

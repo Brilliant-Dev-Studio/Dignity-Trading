@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DukascopyPipCalculator from "@/app/components/DukascopyPipCalculator";
+
+export const metadata: Metadata = {
+  title: "Forex Pip Calculator",
+  description:
+    "Free pip value calculator for forex traders. Calculate pip value instantly based on instrument and account currency.",
+  openGraph: {
+    title: "Pip Calculator — Dignity Trading",
+    description: "Calculate forex pip value instantly for any instrument and account currency.",
+    url: "/tools/pip-calculator",
+  },
+};
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
@@ -28,9 +40,9 @@ export default function PipCalculatorPage() {
         </p>
 
         <div className="mt-10 grid gap-4">
-          <div className="mx-auto w-full max-w-[520px] overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="min-h-[340px] w-full sm:min-h-[300px]">
-              <DukascopyPipCalculator className="h-full w-full" height="100%" width="100%" />
+          <div className="overflow-x-auto">
+            <div className="inline-block overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
+              <DukascopyPipCalculator />
             </div>
           </div>
 

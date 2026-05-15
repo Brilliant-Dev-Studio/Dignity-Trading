@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DukascopyPositionSizeCalculator from "@/app/components/DukascopyPositionSizeCalculator";
+
+export const metadata: Metadata = {
+  title: "Position Size Calculator",
+  description:
+    "Free forex position size calculator. Calculate the right lot size based on your account balance, risk percentage, and stop loss distance.",
+  openGraph: {
+    title: "Position Size Calculator — Dignity Trading",
+    description: "Size your forex trades correctly every time — based on balance, risk %, and stop loss.",
+    url: "/tools/position-sizing-calculator",
+  },
+};
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
@@ -28,9 +40,9 @@ export default function PositionSizingCalculatorPage() {
         </p>
 
         <div className="mt-10 grid gap-4">
-          <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="min-h-[440px] w-full sm:min-h-[364px]">
-              <DukascopyPositionSizeCalculator className="h-full w-full" height="100%" />
+          <div className="overflow-x-auto">
+            <div className="inline-block overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
+              <DukascopyPositionSizeCalculator />
             </div>
           </div>
 

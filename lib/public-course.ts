@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import {
   FOREX_FREE_BEGINNER_COURSE_KEY,
   FOREX_FREE_INTERMEDIATE_COURSE_KEY,
+  MARKET_ANALYSIS_COURSE_KEY,
+  PROFESSIONAL_ADVANCE_COURSE_KEY,
   defaultForexFreeBeginnerDescriptionEn1,
   defaultForexFreeBeginnerDescriptionEn2,
   defaultForexFreeBeginnerDescriptionMy1,
@@ -16,6 +18,20 @@ import {
   defaultForexFreeIntermediateEyebrow,
   defaultForexFreeIntermediateLessonUrls,
   defaultForexFreeIntermediateTitle,
+  defaultMarketAnalysisDescriptionEn1,
+  defaultMarketAnalysisDescriptionEn2,
+  defaultMarketAnalysisDescriptionMy1,
+  defaultMarketAnalysisDescriptionMy2,
+  defaultMarketAnalysisEyebrow,
+  defaultMarketAnalysisLessonUrls,
+  defaultMarketAnalysisTitle,
+  defaultProfessionalAdvanceDescriptionEn1,
+  defaultProfessionalAdvanceDescriptionEn2,
+  defaultProfessionalAdvanceDescriptionMy1,
+  defaultProfessionalAdvanceDescriptionMy2,
+  defaultProfessionalAdvanceEyebrow,
+  defaultProfessionalAdvanceLessonUrls,
+  defaultProfessionalAdvanceTitle,
 } from "@/lib/public-course-defaults";
 
 export type PublicCourseWithLessons = NonNullable<
@@ -25,6 +41,8 @@ export type PublicCourseWithLessons = NonNullable<
 export const ADMIN_MANAGED_PUBLIC_COURSE_KEYS = [
   FOREX_FREE_BEGINNER_COURSE_KEY,
   FOREX_FREE_INTERMEDIATE_COURSE_KEY,
+  PROFESSIONAL_ADVANCE_COURSE_KEY,
+  MARKET_ANALYSIS_COURSE_KEY,
 ] as const;
 
 export type AdminManagedPublicCourseKey =
@@ -78,6 +96,28 @@ function seedPayloadForKey(key: string): SeedPayload {
       lessonUrls: defaultForexFreeIntermediateLessonUrls,
     };
   }
+  if (key === PROFESSIONAL_ADVANCE_COURSE_KEY) {
+    return {
+      eyebrow: defaultProfessionalAdvanceEyebrow,
+      title: defaultProfessionalAdvanceTitle,
+      descriptionEn1: defaultProfessionalAdvanceDescriptionEn1,
+      descriptionEn2: defaultProfessionalAdvanceDescriptionEn2,
+      descriptionMy1: defaultProfessionalAdvanceDescriptionMy1,
+      descriptionMy2: defaultProfessionalAdvanceDescriptionMy2,
+      lessonUrls: defaultProfessionalAdvanceLessonUrls,
+    };
+  }
+  if (key === MARKET_ANALYSIS_COURSE_KEY) {
+    return {
+      eyebrow: defaultMarketAnalysisEyebrow,
+      title: defaultMarketAnalysisTitle,
+      descriptionEn1: defaultMarketAnalysisDescriptionEn1,
+      descriptionEn2: defaultMarketAnalysisDescriptionEn2,
+      descriptionMy1: defaultMarketAnalysisDescriptionMy1,
+      descriptionMy2: defaultMarketAnalysisDescriptionMy2,
+      lessonUrls: defaultMarketAnalysisLessonUrls,
+    };
+  }
   throw new Error(`Unknown public course key: ${key}`);
 }
 
@@ -122,4 +162,12 @@ export async function getForexFreeBeginnerCourseForPublic() {
 
 export async function getForexFreeIntermediateCourseForPublic() {
   return ensurePublicCourseByKey(FOREX_FREE_INTERMEDIATE_COURSE_KEY);
+}
+
+export async function getProfessionalAdvanceCourseForPublic() {
+  return ensurePublicCourseByKey(PROFESSIONAL_ADVANCE_COURSE_KEY);
+}
+
+export async function getMarketAnalysisCourseForPublic() {
+  return ensurePublicCourseByKey(MARKET_ANALYSIS_COURSE_KEY);
 }

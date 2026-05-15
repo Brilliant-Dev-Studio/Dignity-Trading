@@ -1,4 +1,17 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Practical ideas on risk, psychology, and forex strategy — written to be read slowly and applied consistently.",
+  openGraph: {
+    title: "Trading Blog — Dignity Trading",
+    description:
+      "Calm, useful trading notes on risk, psychology, and strategy from Dignity Trading Academy.",
+    url: "/blog",
+  },
+};
 import BlogPageChrome from "./BlogPageChrome";
 import BlogCardsSkeleton from "./BlogCardsSkeleton";
 import BlogPostSections from "./BlogPostSections";

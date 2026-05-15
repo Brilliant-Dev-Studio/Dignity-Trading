@@ -8,7 +8,7 @@ type DukascopyPositionSizeCalculatorProps = {
 
 export default function DukascopyPositionSizeCalculator({
   height = 364,
-  width = "100%",
+  width = 580,
   className,
 }: DukascopyPositionSizeCalculatorProps) {
   const params = new URLSearchParams();
@@ -34,7 +34,7 @@ export default function DukascopyPositionSizeCalculator({
       title="Dukascopy position size calculator"
       src={src}
       className={className}
-      style={{ width: "100%", height }}
+      style={{ width, height }}
       frameBorder={0}
       scrolling="no"
     />

@@ -8,7 +8,7 @@ type DukascopyPipCalculatorProps = {
 
 export default function DukascopyPipCalculator({
   height = 300,
-  width = "100%",
+  width = 290,
   className,
 }: DukascopyPipCalculatorProps) {
   const params = new URLSearchParams();
@@ -30,7 +30,7 @@ export default function DukascopyPipCalculator({
       title="Dukascopy pip calculator"
       src={src}
       className={className}
-      style={{ width: "100%", height }}
+      style={{ width, height }}
       frameBorder={0}
       scrolling="no"
     />

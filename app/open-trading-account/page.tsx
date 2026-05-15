@@ -3,7 +3,7 @@ import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
 export const metadata: Metadata = {
-  title: "Open Trading Account | Dignity Trading",
+  title: "Open Trading Account",
   description:
     "Trading account ဖွင့်ရန် link နှင့် DPM Myanmar Team contact information.",
 };

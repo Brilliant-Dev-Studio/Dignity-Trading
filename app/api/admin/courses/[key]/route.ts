@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import {
   FOREX_FREE_BEGINNER_COURSE_KEY,
   FOREX_FREE_INTERMEDIATE_COURSE_KEY,
+  MARKET_ANALYSIS_COURSE_KEY,
+  PROFESSIONAL_ADVANCE_COURSE_KEY,
 } from "@/lib/public-course-defaults";
 import {
   ensurePublicCourseByKey,
@@ -29,6 +31,12 @@ function revalidatePathsForCourseKey(key: string) {
   }
   if (key === FOREX_FREE_INTERMEDIATE_COURSE_KEY) {
     revalidatePath("/learn-forex-intermediate");
+  }
+  if (key === PROFESSIONAL_ADVANCE_COURSE_KEY) {
+    revalidatePath("/learn-forex-advanced");
+  }
+  if (key === MARKET_ANALYSIS_COURSE_KEY) {
+    revalidatePath("/resources");
   }
 }
 

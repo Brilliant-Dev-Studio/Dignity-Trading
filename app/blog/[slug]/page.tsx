@@ -39,12 +39,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await prisma.post.findFirst({
     where: { slug, status: "PUBLISHED" },
-    select: { title: true, subtitle: true },
+    select: { title: true, subtitle: true, coverUrl: true },
   });
   if (!post) return { title: "Post not found" };
   return {
     title: post.title,
     description: post.subtitle || undefined,
+    openGraph: {
+      title: post.title,
+      description: post.subtitle || undefined,
+      type: "article",
+      url: `/blog/${slug}`,
+      ...(post.coverUrl?.trim() ? { images: [{ url: post.coverUrl }] } : {}),
+    },
   };
 }
 

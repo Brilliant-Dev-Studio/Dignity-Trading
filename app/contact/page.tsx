@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with the Dignity Trading Academy team via email, Viber, or YouTube.",
+  openGraph: {
+    title: "Contact — Dignity Trading",
+    description: "Reach the Dignity Trading Academy team directly.",
+    url: "/contact",
+  },
+};
 
 export default function ContactPage() {
   return (

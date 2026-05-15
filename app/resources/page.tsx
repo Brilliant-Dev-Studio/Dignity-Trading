@@ -1,34 +1,15 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 
-export default function ResourcesPage() {
-  return (
-    <main className="min-h-dvh bg-black text-white">
-      <div className="mx-auto w-[85%] max-w-none px-4 py-16 sm:px-6 lg:px-8">
-        <p className="text-xs font-medium uppercase tracking-[0.28em] text-white/55">
-          Resources
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Save time with curated materials.
-        </h1>
-        <p className="mt-6 max-w-2xl text-sm leading-7 text-white/70">
-          This page will contain reading lists, videos, and recommended references.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link
-            href="/blog"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-white/10 px-4 text-sm font-medium text-white ring-1 ring-white/15 transition hover:bg-white/15"
-          >
-            Blog
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-white px-4 text-sm font-medium text-zinc-950 transition hover:bg-zinc-100"
-          >
-            Back to home
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
-}
+export { default } from "./MarketAnalysisView";
 
+export const metadata: Metadata = {
+  title: "Market Analysis",
+  description:
+    "Weekly and daily forex market analysis — key pairs, session bias, and high-probability setups from Dignity Trading Academy.",
+  openGraph: {
+    title: "Market Analysis — Dignity Trading",
+    description:
+      "Regular forex market analysis videos to sharpen your price action reading. Free from Dignity Trading Academy.",
+    url: "/resources",
+  },
+};

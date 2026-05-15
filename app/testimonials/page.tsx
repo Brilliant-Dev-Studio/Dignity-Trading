@@ -10,6 +10,11 @@ import { TESTIMONIALS } from "@/app/testimonials/testimonials-data";
 export const metadata: Metadata = {
   title: "Testimonials",
   description: "Student feedback on Dignity Trading courses, teaching style, and practical support.",
+  openGraph: {
+    title: "Student Testimonials — Dignity Trading",
+    description: "Real feedback from students who joined our forex trading education and mentoring.",
+    url: "/testimonials",
+  },
 };
 
 const chromeCardTitle =

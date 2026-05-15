@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Start Here",
+  description:
+    "New to Dignity Trading Academy? Start here. Your step-by-step roadmap to learn forex trading with discipline and calm.",
+  openGraph: {
+    title: "Start Here — Dignity Trading",
+    description: "Your recommended learning path from complete beginner to professional-level trader.",
+    url: "/start-here",
+  },
+};
 
 export default function StartHerePage() {
   return (

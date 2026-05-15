@@ -1,12 +1,14 @@
 "use client";
 
 type DukascopyMarketHoursProps = {
-  height?: number | string;
+  height?: number;
+  width?: number;
   className?: string;
 };
 
 export default function DukascopyMarketHours({
   height = 530,
+  width = 775,
   className,
 }: DukascopyMarketHoursProps) {
   const params = new URLSearchParams();
@@ -44,7 +46,7 @@ export default function DukascopyMarketHours({
   );
   params.set("instrument", "EUR/USD");
 
-  params.set("width", "100%");
+  params.set("width", String(width));
   params.set("height", String(height));
   params.set("adv", "popup");
 
@@ -55,7 +57,7 @@ export default function DukascopyMarketHours({
       title="Dukascopy market hours"
       src={src}
       className={className}
-      style={{ width: "100%", height }}
+      style={{ width, height }}
       frameBorder={0}
       scrolling="no"
     />

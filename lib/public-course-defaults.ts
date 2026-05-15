@@ -61,6 +61,72 @@ export const defaultForexFreeIntermediateDescriptionMy2 =
   "တိုးမီ demo မှာ စနစ်ကို အတည်ပြုပါ။ Intermediate အဆင့်မှာ indicator အသစ်ထံခြင်းထက် " +
   "စနစ်တကျ၊ စိတ်ရှည်မှု နှင့် ထပ်တလဲလဲ လုပ်ဆောင်နိုင်သော process က ပိုအရေးကြီးပါသည်။";
 
+/** Stable key for the Professional Advance trading course. */
+export const PROFESSIONAL_ADVANCE_COURSE_KEY = "professional-advance";
+
+export const defaultProfessionalAdvanceEyebrow = "Professional Advance Trading Course";
+
+export const defaultProfessionalAdvanceTitle = "Professional Advance Course";
+
+export const defaultProfessionalAdvanceDescriptionEn1 =
+  "Welcome to the Professional Advance Trading Course by Dignity Trading Academy. This course " +
+  "is built for traders who have moved beyond the basics and intermediate stage and are ready " +
+  "to trade at a professional level. You will master advanced price action concepts, " +
+  "multi-timeframe confluence, institutional order flow, precision entries, and " +
+  "professional-grade risk and position management.";
+
+export const defaultProfessionalAdvanceDescriptionEn2 =
+  "This course demands discipline, reflection, and rigorous practice. Study each lesson " +
+  "thoroughly, build a structured trade journal, and apply every concept systematically on " +
+  "demo before committing capital. Professional trading is defined by process, not luck.";
+
+export const defaultProfessionalAdvanceDescriptionMy1 =
+  "Dignity Trading Academy ၏ Professional Advance Trading Course မှ ကြိုဆိုပါသည်။ ဤ course " +
+  "သည် အခြေခံနှင့် intermediate အဆင့်ကို ကျော်လွန်ပြီး professional level တွင် trade " +
+  "လုပ်ရန် အသင့်ဖြစ်နေသော trader များအတွက် ဖန်တီးထားပါသည်။ Advanced price action " +
+  "concepts, multi-timeframe confluence, institutional order flow, precision entries နှင့် " +
+  "professional-grade risk management တို့ကို အဆင့်လိုက် လေ့လာနိုင်ပါမည်။";
+
+export const defaultProfessionalAdvanceDescriptionMy2 =
+  "ဤ course တွင် discipline, reflection နှင့် တင်းကြပ်သော practice တို့ လိုအပ်ပါသည်။ Lesson " +
+  "တစ်ခုချင်းစီကို သေချာစွာ လေ့လာပြီး trade journal ကို စနစ်တကျ ရေးမှတ်ပါ။ Capital " +
+  "မစတင်မီ demo ပေါ်တွင် concept တစ်ခုချင်းစီကို အတည်ပြုပါ။ Professional trading ကို " +
+  "ကံကောင်းမှုမဟုတ်ဘဲ process ဖြင့်သာ သတ်မှတ်ပါသည်။";
+
+export const defaultProfessionalAdvanceLessonUrls: readonly string[] = [];
+
+/** Stable key for the Market Analysis page (/resources). */
+export const MARKET_ANALYSIS_COURSE_KEY = "market-analysis";
+
+export const defaultMarketAnalysisEyebrow = "Market Analysis";
+
+export const defaultMarketAnalysisTitle = "Market Analysis";
+
+export const defaultMarketAnalysisDescriptionEn1 =
+  "Weekly and daily market analysis covering key forex pairs, session bias, and " +
+  "high-probability setups aligned with the Dignity Trading system. Use these videos " +
+  "to sharpen your own reading of price action — not as signals to copy blindly.";
+
+export const defaultMarketAnalysisDescriptionEn2 =
+  "Focus on understanding the reasoning behind each bias, not just the direction. " +
+  "Apply what you observe to your own charts and compare your thinking with what is " +
+  "presented here. Consistent review builds the pattern recognition every serious " +
+  "trader needs.";
+
+export const defaultMarketAnalysisDescriptionMy1 =
+  "Forex pair အရေးကြီးသောများ၊ session bias နှင့် Dignity Trading system နှင့် " +
+  "ကိုက်ညီသော high-probability setup များကို အပတ်စဉ်နှင့် နေ့စဉ် market analysis " +
+  "များဖြင့် ခြုံငုံသုံးသပ်ပါသည်။ ဤ video များကို signal အဖြစ် မကူးယူဘဲ မိမိကိုယ်ပိုင် " +
+  "price action ကို ပိုမိုကျွမ်းကျင်လာစေရန် အသုံးပြုပါ။";
+
+export const defaultMarketAnalysisDescriptionMy2 =
+  "ဦးတည်ချက်သာမကဘဲ bias နောက်ကွယ်ရှိ အကြောင်းရင်းကို နားလည်ရန် အာရုံစိုက်ပါ။ " +
+  "မြင်တွေ့သည်များကို မိမိ chart နှင့် နှိုင်းယှဉ်၍ မိမိ၏ analysis ကို ဤနေရာတွင် " +
+  "တင်ပြသည်များနှင့် စစ်ဆေးကြည့်ပါ။ နေ့တိုင်း ပုံမှန် review လုပ်ခြင်းက အတွေ့အကြုံကို " +
+  "ကျွမ်းကျင်မှုအဖြစ် ပြောင်းလဲပေးပါသည်။";
+
+export const defaultMarketAnalysisLessonUrls: readonly string[] = [];
+
 /** Initial lesson list matches beginner until you change it in admin. */
 export const defaultForexFreeIntermediateLessonUrls = [
   "https://youtu.be/jz7Fwy3d5Ow?si=jT72L0yrzyCZPVFJ",

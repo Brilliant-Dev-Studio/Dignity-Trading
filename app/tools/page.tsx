@@ -1,6 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
+
+export const metadata: Metadata = {
+  title: "Free Forex Trading Tools",
+  description:
+    "Free forex tools for traders — pip calculator, position size calculator, market hours, economic calendar, and live charts.",
+  openGraph: {
+    title: "Free Forex Tools — Dignity Trading",
+    description:
+      "Calculators, charts, and market data tools to support your daily forex trading decisions.",
+    url: "/tools",
+  },
+};
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 
 export default function ToolsPage() {

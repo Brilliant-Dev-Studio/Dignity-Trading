@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Meet the team behind Dignity Trading Academy. Disciplined, rules-first forex education — no hype, no shortcuts.",
+  openGraph: {
+    title: "About Dignity Trading",
+    description: "The values, approach, and mission behind Dignity Trading Academy.",
+    url: "/about",
+  },
+};
 
 export default function AboutPage() {
   return (

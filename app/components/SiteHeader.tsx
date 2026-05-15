@@ -122,7 +122,7 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         children: [
           { label: "Free Forex Beginner Trading Course", href: "/learn-forex" },
           { label: "Free Intermediate Trading Course", href: "/learn-forex-intermediate" },
-          { label: "Professional Advance Trading Course", href: "/courses?level=advance" },
+          { label: "Professional Advance Trading Course", href: "/learn-forex-advanced" },
         ],
       },
       { label: "Market Analysis", href: "/resources" },
@@ -139,7 +139,6 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       },
       { label: "Blog", href: "/blog" },
       { label: "Testimonial", href: "/testimonials" },
-      { label: "Open Trading Account", href: "/open-trading-account" },
       { label: "Contact", href: "/contact" },
       { label: "Disclaimer", href: "/disclaimer" },
     ],
@@ -166,10 +165,10 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   }, [pathname]);
 
   const deskBase =
-    "relative inline-flex h-9 cursor-pointer items-center gap-0.5 rounded-full px-2 text-[11px] font-medium tracking-wide text-zinc-400 antialiased transition-[color,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_45%,transparent)] focus-visible:ring-offset-0 whitespace-nowrap lg:px-2.5 lg:text-[12px] lg:leading-none";
+    "relative inline-flex h-8 cursor-pointer items-center gap-1 rounded-full px-3 text-[12px] font-medium tracking-[0.01em] text-zinc-400 antialiased transition-[color,background-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_45%,transparent)] focus-visible:ring-offset-0 whitespace-nowrap lg:text-[12.5px]";
   const deskOn =
-    "bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]";
-  const deskOff = "hover:bg-white/[0.05] hover:text-zinc-100";
+    "bg-white/[0.10] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.25)]";
+  const deskOff = "hover:bg-white/[0.06] hover:text-zinc-100";
 
   const mobileRowBase =
     "group flex h-12 cursor-pointer items-center justify-between rounded-xl px-3 text-[15px] font-medium transition";
@@ -182,47 +181,49 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const mobileChildOff = "text-white/72 hover:bg-white/10 hover:text-white";
 
   const dropdownItemBase =
-    "flex !cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-[11px] font-medium tracking-wide transition";
-  const dropdownItemOn = "bg-white/[0.08] text-white";
-  const dropdownItemOff = "text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-100";
+    "group/item flex !cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-[12px] font-medium tracking-[0.01em] transition duration-150";
+  const dropdownItemOn = "bg-white/[0.10] text-white";
+  const dropdownItemOff = "text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-200";
 
   return (
     <header
       className={[
         overlay ? "fixed left-0 right-0 top-0" : "sticky top-0",
-        "z-[1400] w-full",
+        "z-[1400] w-full transition-[background-color,border-color,backdrop-filter,box-shadow] duration-300",
         isScrolled
-          ? "border-b border-white/[0.05] bg-black/65 backdrop-blur-xl shadow-[0_18px_55px_rgba(0,0,0,0.55)]"
+          ? "border-b border-white/[0.07] bg-black/70 backdrop-blur-2xl shadow-[0_1px_0_rgba(255,255,255,0.04),0_20px_60px_rgba(0,0,0,0.5)]"
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
       onMouseLeave={() => setOpenMenu(null)}
     >
-      <div className="mx-auto w-full max-w-none px-4 py-2.5 sm:w-[95%] sm:px-6 lg:px-8">
-        <div className="grid h-10 grid-cols-[auto_1fr_auto] items-center gap-3 min-w-0 md:gap-4">
+      <div className="mx-auto w-full max-w-none px-4 py-2 sm:w-[95%] sm:px-6 lg:px-8">
+        <div className="grid h-11 grid-cols-[auto_1fr_auto] items-center gap-3 min-w-0 md:gap-4">
           <Link
             href="/"
-            className="flex items-center gap-2.5 justify-self-start shrink-0 cursor-pointer"
+            className="group flex items-center gap-2.5 justify-self-start shrink-0 cursor-pointer"
           >
-            <div className="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-white/8 ring-1 ring-white/10">
+            <div className="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-full bg-white/8 ring-1 ring-white/15 shadow-[0_0_0_3px_rgba(255,255,255,0.03)] transition group-hover:ring-white/25">
               <Image
                 src="/logo.png"
                 alt="Dignity Trading"
-                width={36}
-                height={36}
+                width={40}
+                height={40}
                 className="h-full w-full object-cover"
                 priority={false}
               />
             </div>
             <div className="leading-tight">
-              <div className="text-sm font-semibold tracking-wide text-white sm:text-[15px]">
-                Dignity Trading
+              <div className="text-[14px] font-semibold tracking-[-0.01em] text-white transition group-hover:text-white/90">
+                Dignity <span className="font-normal text-white/55">Trading</span>
               </div>
             </div>
           </Link>
 
           <div className="hidden min-w-min justify-self-center lg:block">
-            <div className="relative z-[1200] w-max shrink-0 overflow-visible rounded-full border border-white/[0.08] bg-zinc-950/55 p-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] backdrop-blur-xl">
-              <div className="flex h-9 w-max items-center gap-px overflow-visible rounded-full px-0.5">
+            <div className="relative z-[1200] w-max shrink-0 overflow-visible rounded-full border border-white/10 bg-black/40 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_4px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl">
+              {/* pill top glow line */}
+              <div aria-hidden className="pointer-events-none absolute inset-x-4 top-0 h-px rounded-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
+              <div className="flex h-8 w-max items-center gap-0.5 overflow-visible rounded-full">
                 {menu.map((item) => {
                   if ("children" in item && item.children) {
                     return (
@@ -258,14 +259,17 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
                       <div
                         role="menu"
                         className={[
-                          "absolute left-0 top-full z-[1100] min-w-52 overflow-hidden rounded-xl border border-white/[0.09] bg-zinc-950/95 p-1 shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl",
-                          "opacity-0 pointer-events-none translate-y-1 transition-[opacity,transform] duration-200",
-                          "group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-2",
+                          "absolute left-0 top-full z-[1100] min-w-56 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/96 shadow-[0_24px_60px_rgba(0,0,0,0.7),0_1px_0_rgba(255,255,255,0.05)_inset] backdrop-blur-2xl",
+                          "opacity-0 pointer-events-none translate-y-1 scale-[0.98] transition-[opacity,transform] duration-200 origin-top",
+                          "group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-2 group-hover:scale-100",
                           openMenu === item.label
-                            ? "opacity-100 pointer-events-auto translate-y-2"
+                            ? "opacity-100 pointer-events-auto translate-y-2 scale-100"
                             : "",
                         ].join(" ")}
                       >
+                        {/* dropdown top accent line */}
+                        <div aria-hidden className="h-px w-full bg-linear-to-r from-transparent via-[color-mix(in_oklab,var(--brand-400)_55%,white)] to-transparent opacity-60" />
+                        <div className="p-1.5">
                         {item.children.map((child) => {
                           const childActive = isHrefActive(
                             child.href,
@@ -284,11 +288,12 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
                                 childActive ? dropdownItemOn : dropdownItemOff,
                               )}
                             >
-                              <span>{child.label}</span>
-                              <span className="text-[10px] text-white/35">↗</span>
+                              <span className="flex-1">{child.label}</span>
+                              <span className="shrink-0 text-[10px] text-white/25 transition-colors group-hover/item:text-white/50">↗</span>
                             </Link>
                           );
                         })}
+                        </div>
                       </div>
                     </div>
                     );
@@ -314,11 +319,23 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             </div>
           </div>
 
-          <div className="justify-self-end shrink-0">
+          <div className="flex items-center gap-2 justify-self-end shrink-0">
+            {/* Desktop CTA — hidden on mobile */}
+            <Link
+              href="/open-trading-account"
+              className="hidden lg:inline-flex h-8 items-center gap-1.5 rounded-full bg-white/[0.08] px-4 text-[12px] font-medium text-white ring-1 ring-white/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:bg-white/[0.14] hover:ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_45%,transparent)]"
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color-mix(in_oklab,var(--brand-400)_80%,white)] opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color-mix(in_oklab,var(--brand-400)_90%,white)]" />
+              </span>
+              Open Account
+            </Link>
+            {/* Mobile hamburger */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="inline-flex h-10 w-10 -mr-2 cursor-pointer items-center justify-center rounded-full border border-transparent text-zinc-300 transition hover:border-white/10 hover:bg-white/[0.05] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_40%,transparent)] lg:hidden"
+              className="inline-flex h-9 w-9 -mr-1 cursor-pointer items-center justify-center rounded-full border border-transparent text-zinc-300 transition hover:border-white/10 hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--brand-400)_40%,transparent)] lg:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />

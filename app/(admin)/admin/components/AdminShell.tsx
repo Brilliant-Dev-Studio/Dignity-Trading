@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useSyncExternalStore } from "react";
 import {
+  BarChart2,
   ChevronLeft,
   ChevronRight,
   FileText,
@@ -12,6 +13,7 @@ import {
   Layers,
   LayoutDashboard,
   LogOut,
+  TrendingUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,16 @@ const navItems = [
     label: "Intermediate course",
     href: "/admin/courses/forex-free-intermediate",
     icon: Layers,
+  },
+  {
+    label: "Professional Advance",
+    href: "/admin/courses/professional-advance",
+    icon: TrendingUp,
+  },
+  {
+    label: "Market Analysis",
+    href: "/admin/courses/market-analysis",
+    icon: BarChart2,
   },
 ];
 

@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
+
+export const metadata: Metadata = {
+  title: "Live Forex Charts",
+  description:
+    "Live forex charts powered by TradingView. Advanced charting, symbol overview, and market summary — free for all traders.",
+  openGraph: {
+    title: "Live Forex Charts — Dignity Trading",
+    description: "Advanced TradingView charts, symbol overview, and market summary in one place.",
+    url: "/tools/charts",
+  },
+};
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
 import TradingViewSymbolOverview from "@/app/components/TradingViewSymbolOverview";
 import TradingViewAdvancedChart from "@/app/components/TradingViewAdvancedChart";
@@ -43,9 +55,7 @@ export default function ChartsPage() {
           </div>
 
           <div className="w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10">
-            <div className="h-[420px] w-full sm:h-[320px]">
-              <TradingViewMarketSummary className="h-full w-full" direction="horizontal" />
-            </div>
+            <TradingViewMarketSummary className="w-full" direction="horizontal" />
           </div>
 
           <div className="flex flex-wrap gap-3">

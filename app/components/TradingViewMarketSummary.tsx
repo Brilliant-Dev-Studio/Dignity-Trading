@@ -23,9 +23,14 @@ export default function TradingViewMarketSummary({
   }, []);
 
   // Render custom element via createElement to avoid TSX typing noise.
+  // style must be a string for custom elements — React does not process
+  // the style object for non-HTML elements the same way it does for HTML.
   return (
     <div className={className}>
-      {createElement("tv-market-summary", { direction })}
+      {createElement("tv-market-summary", {
+        direction,
+        style: { display: "block", width: "100%" },
+      })}
     </div>
   );
 }
