@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, GraduationCap } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
+import BackToHomeButton from "@/app/components/BackToHomeButton";
 import TestimonialsGallery from "@/app/components/TestimonialsGallery";
 import { TESTIMONIALS } from "@/app/testimonials/testimonials-data";
 
@@ -28,17 +29,11 @@ export default function TestimonialsPage() {
         >
           Testimonials
         </p>
-        <div className="mt-4 inline-flex flex-col">
-          <h1
-            className={`text-4xl font-semibold tracking-tight sm:text-5xl ${blogChromeTitleClass}`}
-          >
-            What students say
-          </h1>
-          <span
-            aria-hidden="true"
-            className="mt-3 h-px w-24 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--brand-400)_70%,white),transparent)] opacity-70"
-          />
-        </div>
+        <h1
+          className={`mt-4 text-4xl font-semibold tracking-tight sm:text-5xl ${blogChromeTitleClass}`}
+        >
+          What students say
+        </h1>
         <p className="mt-6 max-w-2xl text-sm leading-7 text-white/70 sm:text-base sm:leading-7">
           Real feedback from people who joined our trading education and mentoring.
         </p>
@@ -66,26 +61,7 @@ export default function TestimonialsPage() {
             <span className="text-white/88 transition group-hover:text-white">Courses</span>
           </Link>
 
-          <Link
-            href="/"
-            className={[
-              "group relative inline-flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full px-6 text-sm font-semibold",
-              "text-zinc-950",
-              "bg-[linear-gradient(165deg,#ffffff_0%,#f4f4f5_42%,#e4e4e7_100%)]",
-              "shadow-[0_12px_40px_rgba(0,0,0,0.42),0_0_32px_color-mix(in_oklab,var(--brand-400)_20%,transparent),inset_0_1px_0_rgba(255,255,255,0.92)]",
-              "ring-1 ring-white/70 transition duration-200 ease-out",
-              "hover:-translate-y-0.5 hover:shadow-[0_18px_52px_rgba(0,0,0,0.48),0_0_44px_color-mix(in_oklab,var(--brand-400)_30%,transparent),inset_0_1px_0_#fff]",
-              "hover:ring-white",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-              "cursor-pointer active:translate-y-0",
-            ].join(" ")}
-          >
-            <ArrowLeft
-              className="relative h-4 w-4 shrink-0 transition group-hover:-translate-x-0.5"
-              aria-hidden
-            />
-            <span className="relative">Back to home</span>
-          </Link>
+          <BackToHomeButton />
         </div>
     </BlogPageChrome>
   );

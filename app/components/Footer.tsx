@@ -4,10 +4,12 @@ import type { SVGProps } from "react";
 const SOCIAL = {
   facebook: "https://www.facebook.com/",
   youtube: "https://www.youtube.com/@dignityforexcryptostocktra5933",
-  /** Public chat or invite link, e.g. https://invite.viber.com/... */
-  viber: "https://www.viber.com/",
+  viber: "viber://chat?number=+959970276429",
   email: "mailto:contact@dignitytrading.com",
 } as const;
+
+const VIBER_DISPLAY = "09 970 276 429";
+const CONTACT_EMAIL_DISPLAY = "contact@dignitytrading.com";
 
 function IconFacebook(props: SVGProps<SVGSVGElement>) {
   return (
@@ -110,8 +112,8 @@ export default function Footer() {
                 <a
                   key={key}
                   href={href}
-                  target={key === "email" ? undefined : "_blank"}
-                  rel={key === "email" ? undefined : "noopener noreferrer"}
+                  target={key === "email" || key === "viber" ? undefined : "_blank"}
+                  rel={key === "email" || key === "viber" ? undefined : "noopener noreferrer"}
                   aria-label={label}
                   className={linkClass}
                 >
@@ -128,7 +130,7 @@ export default function Footer() {
                 href={SOCIAL.email}
                 className="inline-flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-white/10 hover:text-white"
               >
-                <span className="text-white/55">Email:</span> contact@dignitytrading.com
+                <span className="text-white/55">Email:</span> {CONTACT_EMAIL_DISPLAY}
               </a>
               <a
                 href={SOCIAL.youtube}
@@ -140,11 +142,9 @@ export default function Footer() {
               </a>
               <a
                 href={SOCIAL.viber}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-white/10 hover:text-white"
               >
-                <span className="text-white/55">Viber:</span> Community chat
+                <span className="text-white/55">Viber:</span> {VIBER_DISPLAY}
               </a>
             </div>
           </div>

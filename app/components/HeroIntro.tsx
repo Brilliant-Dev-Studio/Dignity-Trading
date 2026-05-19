@@ -542,7 +542,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               <span className="inline-flex flex-wrap items-baseline justify-center gap-x-3 lg:justify-start">
                 <BlurText
                   as="span"
-                  text="Trade with"
+                  text="Let's build a"
                   delay={12}
                   stepDuration={0.22}
                   start
@@ -552,19 +552,19 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 />
                 <BlurText
                   as="span"
-                  text="discipline."
+                  text="good"
                   delay={12}
                   stepDuration={0.22}
                   start
                   animateBy="words"
                   direction="top"
-                  className="bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] bg-clip-text text-transparent"
+                  className="bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] bg-clip-text text-transparent pb-[0.12em] pt-[0.04em] leading-[1.15]"
                 />
               </span>
               <span className="inline-block w-2 sm:w-2.5" aria-hidden="true" />
               <BlurText
                 as="span"
-                text="Build a repeatable system"
+                text="trading system"
                 delay={12}
                 stepDuration={0.22}
                 start
@@ -601,7 +601,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               transition={{ duration: 0.8, ease: softEase, delay: 0.22 }}
             >
               <motion.a
-                href="#free"
+                href="/learn-forex"
                 className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] px-5 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(0,0,0,0.35)] shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_18px_60px_color-mix(in_oklab,var(--brand-400)_28%,transparent)] transition hover:brightness-110 active:brightness-105"
                 variants={buttonAppear}
                 initial="hidden"
@@ -612,7 +612,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               >
                 <BlurText
                   as="span"
-                  text="Join the free class"
+                  text="Learn Free course"
                   delay={10}
                   stepDuration={0.2}
                   start
@@ -621,7 +621,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                 />
               </motion.a>
               <motion.a
-                href="#program"
+                href="/learn-forex-advanced"
                 className="inline-flex h-11 items-center justify-center rounded-full bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 backdrop-blur transition hover:bg-white/14 hover:ring-white/25"
                 variants={buttonAppear}
                 initial="hidden"
@@ -632,7 +632,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               >
                 <BlurText
                   as="span"
-                  text="View the program"
+                  text="Learn Private course"
                   delay={10}
                   stepDuration={0.2}
                   start

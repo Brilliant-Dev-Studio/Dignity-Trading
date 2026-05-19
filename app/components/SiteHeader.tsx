@@ -108,15 +108,6 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     () => [
       { label: "Home", href: "/" },
       {
-        label: "Mission",
-        href: "/#mission",
-        children: [
-          { label: "Your skill our focus", href: "/#mission" },
-          { label: "Fast Clear Road Map", href: "/#mission" },
-          { label: "Support and Accountability", href: "/#mission" },
-        ],
-      },
-      {
         label: "Trading Course",
         href: "/courses",
         children: [

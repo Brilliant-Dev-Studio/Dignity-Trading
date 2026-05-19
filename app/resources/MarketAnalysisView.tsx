@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
 import { blogChromeTitleClass } from "@/app/blog/blog-chrome";
+import BackToHomeButton from "@/app/components/BackToHomeButton";
 import { extractYoutubeId } from "@/lib/blog-html";
 import {
   defaultMarketAnalysisEyebrow,
@@ -143,12 +144,7 @@ export default async function MarketAnalysisView() {
         >
           Blog
         </Link>
-        <Link
-          href="/"
-          className="inline-flex h-10 items-center justify-center rounded-md bg-white px-4 text-sm font-medium text-zinc-950 transition hover:bg-zinc-100"
-        >
-          Back to home
-        </Link>
+        <BackToHomeButton />
       </div>
     </BlogPageChrome>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import BlogPageChrome from "@/app/blog/BlogPageChrome";
+import BackToHomeButton from "@/app/components/BackToHomeButton";
 
 export const metadata: Metadata = {
   title: "Free Forex Trading Tools",
@@ -45,12 +46,7 @@ export default function ToolsPage() {
           >
             Resources
           </Link>
-          <Link
-            href="/"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-white px-4 text-sm font-medium text-zinc-950 transition hover:bg-zinc-100"
-          >
-            Back to home
-          </Link>
+          <BackToHomeButton />
         </div>
     </BlogPageChrome>
   );
