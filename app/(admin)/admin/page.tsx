@@ -16,7 +16,7 @@ import {
   ChartLegend,
   ChartTooltip,
 } from "@/components/ui/chart";
-import { BookOpenText, Eye, Flame, TrendingUp } from "lucide-react";
+import { BookOpenText, Eye, Flame, Globe2, TrendingUp, Users } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, XAxis, YAxis } from "recharts";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
@@ -65,10 +65,46 @@ type BlogAnalyticsResponse = {
   trending: TrendingBlogRow[];
 };
 
+type VisitorRange = "today" | "7d" | "30d" | "all";
+
+type VisitorAnalyticsResponse = {
+  generatedAt: string;
+  range: VisitorRange;
+  stats: {
+    uniqueVisitors: number;
+    viewsTotal: number;
+    countryCount: number;
+  };
+  byDay: Array<{ day: string; unique: number }>;
+  topCountries: Array<{ country: string; unique: number }>;
+};
+
+const VISITOR_RANGE_OPTIONS: { value: VisitorRange; label: string }[] = [
+  { value: "today", label: "Today" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "all", label: "All time" },
+];
+
+function regionNameFromCode(code: string): string {
+  if (!code || code === "XX") return "Unknown";
+  try {
+    const dn = new Intl.DisplayNames(undefined, { type: "region" });
+    return dn.of(code.toUpperCase()) ?? code;
+  } catch {
+    return code;
+  }
+}
+
 export default function AdminDashboardPage() {
   const [data, setData] = useState<BlogAnalyticsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  const [visitorRange, setVisitorRange] = useState<VisitorRange>("7d");
+  const [visitorData, setVisitorData] = useState<VisitorAnalyticsResponse | null>(null);
+  const [visitorLoading, setVisitorLoading] = useState(true);
+  const [visitorError, setVisitorError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +135,38 @@ export default function AdminDashboardPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function run() {
+      try {
+        setVisitorLoading(true);
+        setVisitorError(null);
+        const res = await fetch(
+          `/api/admin/analytics/visitors?range=${visitorRange}`,
+          { method: "GET" },
+        );
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        const json = (await res.json()) as VisitorAnalyticsResponse;
+        if (cancelled) return;
+        setVisitorData(json);
+      } catch (e) {
+        if (cancelled) return;
+        setVisitorError(
+          e instanceof Error ? e.message : "Failed to load visitor analytics",
+        );
+      } finally {
+        if (cancelled) return;
+        setVisitorLoading(false);
+      }
+    }
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [visitorRange]);
 
   const blogCount = data?.stats.blogCount ?? 0;
   const draftCount = data?.stats.draftCount ?? 0;
@@ -223,6 +291,272 @@ export default function AdminDashboardPage() {
             );
           })
         )}
+      </section>
+
+      <section className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
+            Visitor analytics
+          </h3>
+          <p className="text-sm text-zinc-600">
+            Unique IPs per day, grouped by country (from Vercel edge geo).
+          </p>
+        </div>
+        <div
+          role="tablist"
+          aria-label="Visitor range"
+          className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 text-xs font-medium"
+        >
+          {VISITOR_RANGE_OPTIONS.map((opt) => {
+            const active = visitorRange === opt.value;
+            return (
+              <button
+                key={opt.value}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setVisitorRange(opt.value)}
+                className={cn(
+                  "rounded-lg px-3 py-1.5 transition",
+                  active
+                    ? "bg-zinc-900 text-white shadow-sm"
+                    : "text-zinc-600 hover:bg-zinc-100",
+                )}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="mt-4 grid gap-4 md:grid-cols-2">
+        {visitorLoading ? (
+          <>
+            {[2, 3].map((i) => (
+              <Card
+                key={i}
+                className={[
+                  "relative overflow-hidden !shadow-none",
+                  statCardStyles[i % statCardStyles.length],
+                ].join(" ")}
+                aria-busy="true"
+                aria-label="Loading stat"
+              >
+                <CardHeader className="relative pb-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-3">
+                      <Sk className="h-3.5 w-28" />
+                      <Sk className="h-9 w-20 max-w-full" />
+                    </div>
+                    <Sk className="h-11 w-11 shrink-0 rounded-xl" />
+                  </div>
+                </CardHeader>
+                <CardContent className="relative">
+                  <Sk className="h-4 w-40 max-w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </>
+        ) : (
+          (() => {
+            const uniq = visitorData?.stats.uniqueVisitors ?? 0;
+            const views = visitorData?.stats.viewsTotal ?? 0;
+            const countries = visitorData?.stats.countryCount ?? 0;
+            const visitorStats = [
+              {
+                label: "Unique visitors",
+                value: Intl.NumberFormat(undefined).format(uniq),
+                change: `${Intl.NumberFormat(undefined).format(views)} total views`,
+                icon: Users,
+              },
+              {
+                label: "Countries reached",
+                value: String(countries),
+                change:
+                  countries === 0
+                    ? "No data yet"
+                    : `${countries} ${countries === 1 ? "country" : "countries"}`,
+                icon: Globe2,
+              },
+            ];
+            return visitorStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card
+                  key={stat.label}
+                  className={[
+                    "group relative overflow-hidden",
+                    "!shadow-none transition",
+                    statCardStyles[(index + 2) % statCardStyles.length],
+                  ].join(" ")}
+                >
+                  <CardHeader className="relative pb-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <CardDescription className="text-zinc-600">
+                          {stat.label}
+                        </CardDescription>
+                        <CardTitle className="mt-1 text-3xl">
+                          {stat.value}
+                        </CardTitle>
+                      </div>
+                      <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/70 ring-1 ring-zinc-200">
+                        <Icon className="h-5 w-5 text-zinc-800" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="relative">
+                    <p className="text-sm text-zinc-600">{stat.change}</p>
+                  </CardContent>
+                </Card>
+              );
+            });
+          })()
+        )}
+      </section>
+
+      <section className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <Card className="overflow-hidden !shadow-none">
+          <CardHeader>
+            <CardTitle>Daily unique visitors</CardTitle>
+            <CardDescription>
+              Unique IPs per UTC day for the selected range.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {visitorLoading ? (
+              <div
+                className="flex h-[260px] flex-col justify-end gap-3 rounded-lg border border-zinc-100 bg-zinc-50/50 p-4"
+                aria-busy="true"
+              >
+                <div className="flex flex-1 items-end justify-between gap-2 px-1 pt-8">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <Sk
+                      key={i}
+                      className="w-full rounded-t-md"
+                      style={{ height: `${24 + ((i * 19) % 60)}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : visitorError ? (
+              <p className="text-sm text-zinc-500">
+                Couldn’t load visitor data.
+              </p>
+            ) : (visitorData?.byDay ?? []).length === 0 ? (
+              <p className="text-sm text-zinc-600">No visits yet in this range.</p>
+            ) : (
+              <ChartContainer
+                config={{
+                  unique: { label: "Unique", color: "var(--brand-600)" },
+                }}
+              >
+                <AreaChart
+                  data={visitorData?.byDay ?? []}
+                  margin={{ left: 8, right: 8 }}
+                >
+                  <ChartGrid />
+                  <XAxis
+                    dataKey="day"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                  />
+                  <YAxis tickLine={false} axisLine={false} width={32} />
+                  <ChartTooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="unique"
+                    stroke="var(--chart-unique)"
+                    fill="var(--chart-unique)"
+                    fillOpacity={0.12}
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden !shadow-none">
+          <CardHeader>
+            <CardTitle>Visitors by country</CardTitle>
+            <CardDescription>Top countries by unique visitors.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {visitorLoading ? (
+              <div
+                className="flex h-[260px] flex-col gap-3 rounded-lg border border-zinc-100 bg-zinc-50/50 p-4"
+                aria-busy="true"
+              >
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Sk
+                    key={i}
+                    className="h-5 rounded-md"
+                    style={{ width: `${90 - i * 12}%` }}
+                  />
+                ))}
+              </div>
+            ) : visitorError ? (
+              <p className="text-sm text-zinc-500">
+                Couldn’t load country data.
+              </p>
+            ) : (visitorData?.topCountries ?? []).length === 0 ? (
+              <p className="text-sm text-zinc-600">No country data yet.</p>
+            ) : (
+              <>
+                <ChartContainer
+                  className="h-[220px]"
+                  config={{
+                    unique: { label: "Unique", color: "var(--brand-600)" },
+                  }}
+                >
+                  <BarChart
+                    data={(visitorData?.topCountries ?? []).map((c) => ({
+                      country: c.country,
+                      unique: c.unique,
+                    }))}
+                    layout="vertical"
+                    margin={{ left: 8, right: 12 }}
+                  >
+                    <ChartGrid />
+                    <XAxis type="number" tickLine={false} axisLine={false} />
+                    <YAxis
+                      type="category"
+                      dataKey="country"
+                      tickLine={false}
+                      axisLine={false}
+                      width={44}
+                    />
+                    <ChartTooltip />
+                    <Bar
+                      dataKey="unique"
+                      radius={[0, 8, 8, 0]}
+                      fill="var(--chart-unique)"
+                      fillOpacity={0.88}
+                    />
+                  </BarChart>
+                </ChartContainer>
+                <ul className="mt-3 space-y-1.5 text-xs">
+                  {(visitorData?.topCountries ?? []).slice(0, 5).map((c) => (
+                    <li
+                      key={c.country}
+                      className="flex items-center justify-between gap-3"
+                    >
+                      <span className="truncate text-zinc-700">
+                        <span className="font-mono text-zinc-500">{c.country}</span>{" "}
+                        · {regionNameFromCode(c.country)}
+                      </span>
+                      <span className="font-medium tabular-nums text-zinc-900">
+                        {Intl.NumberFormat(undefined).format(c.unique)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </section>
 
       <section className="mt-6">

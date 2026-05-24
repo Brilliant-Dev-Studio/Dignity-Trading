@@ -130,6 +130,7 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       },
       { label: "Blog", href: "/blog" },
       { label: "Testimonial", href: "/testimonials" },
+      { label: "Open Account", href: "/open-trading-account" },
       { label: "Contact", href: "/contact" },
       { label: "Disclaimer", href: "/disclaimer" },
     ],
@@ -211,11 +212,11 @@ export default function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </Link>
 
           <div className="hidden min-w-min justify-self-center lg:block">
-            <div className="relative z-[1200] w-max shrink-0 overflow-visible rounded-full border border-white/10 bg-black/40 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_4px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl">
+            <div className="relative z-[1200] w-max shrink-0 overflow-visible rounded-full border border-white/6 bg-zinc-950/70 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.4)]">
               {/* pill top glow line */}
               <div aria-hidden className="pointer-events-none absolute inset-x-4 top-0 h-px rounded-full bg-linear-to-r from-transparent via-white/20 to-transparent" />
               <div className="flex h-8 w-max items-center gap-0.5 overflow-visible rounded-full">
-                {menu.map((item) => {
+                {menu.filter((item) => item.href !== "/open-trading-account").map((item) => {
                   if ("children" in item && item.children) {
                     return (
                     <div key={item.label} className="group relative shrink-0">

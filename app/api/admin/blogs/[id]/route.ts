@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import type { AdminPatchBlogRequest } from "../createTypes";
@@ -115,6 +116,9 @@ export async function PATCH(
     },
   });
 
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${post.slug}`);
+
   return NextResponse.json({ post });
 }
 
@@ -130,7 +134,7 @@ export async function DELETE(
 
   const existing = await prisma.post.findUnique({
     where: { id },
-    select: { id: true },
+    select: { id: true, slug: true },
   });
 
   if (!existing) {
@@ -138,6 +142,9 @@ export async function DELETE(
   }
 
   await prisma.post.delete({ where: { id } });
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${existing.slug}`);
 
   return NextResponse.json({ ok: true });
 }

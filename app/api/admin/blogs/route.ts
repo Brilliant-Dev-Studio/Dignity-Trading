@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import type { AdminCreateBlogRequest } from "./createTypes";
@@ -250,6 +251,9 @@ export async function POST(req: Request) {
     }
     throw e;
   }
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${post.slug}`);
 
   return NextResponse.json({ post }, { status: 201 });
 }

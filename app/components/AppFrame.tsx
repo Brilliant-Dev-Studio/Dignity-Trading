@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Footer from "@/app/components/Footer";
 import SiteHeader from "@/app/components/SiteHeader";
+import VisitTracker from "@/app/components/VisitTracker";
 
 export default function AppFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export default function AppFrame({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <VisitTracker />
       <SiteHeader overlay={isHome} />
       <div className="flex-1">{children}</div>
       <Footer />

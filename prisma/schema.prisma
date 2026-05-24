@@ -58,3 +58,16 @@ model PublicCourseLesson {
 
   @@index([courseId, sortOrder])
 }
+
+model PageView {
+  id        String   @id @default(cuid())
+  day       DateTime @db.Date
+  ipHash    String
+  country   String   @default("XX")
+  path      String   @default("/")
+  createdAt DateTime @default(now())
+
+  @@unique([day, ipHash, path])
+  @@index([day])
+  @@index([country, day])
+}

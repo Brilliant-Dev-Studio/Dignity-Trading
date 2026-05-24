@@ -497,6 +497,16 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
         />
       </video>
 
+      <Image
+        src="/chartBgRemoved.png"
+        alt=""
+        aria-hidden="true"
+        width={900}
+        height={600}
+        priority={false}
+        className="pointer-events-none absolute right-[10%] top-1/2 z-[-5] hidden -translate-y-1/2 select-none opacity-[0.28] mix-blend-screen lg:block lg:w-[52%] xl:w-[46%]"
+      />
+
       <div className="relative z-10 mx-auto flex min-h-dvh w-[97%] max-w-none flex-col px-4 pb-5 pt-0 sm:w-[85%] sm:px-6 sm:pb-6 lg:px-8">
         <div aria-hidden="true" style={{ height: headerH }} />
 
@@ -558,7 +568,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
                   start
                   animateBy="words"
                   direction="top"
-                  className="bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand-400)_92%,white),var(--brand-700))] bg-clip-text text-transparent pb-[0.12em] pt-[0.04em] leading-[1.15]"
+                  className="text-[color-mix(in_oklab,var(--brand-400)_88%,white)] pb-[0.12em] pt-[0.04em] leading-[1.15]"
                 />
               </span>
               <span className="inline-block w-2 sm:w-2.5" aria-hidden="true" />
@@ -632,7 +642,7 @@ export default function HeroIntro({ showHeader = true }: { showHeader?: boolean 
               >
                 <BlurText
                   as="span"
-                  text="Learn Private course"
+                  text="Learn Advance Course"
                   delay={10}
                   stepDuration={0.2}
                   start
