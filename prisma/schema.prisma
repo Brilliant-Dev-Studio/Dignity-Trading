@@ -59,6 +59,13 @@ model PublicCourseLesson {
   @@index([courseId, sortOrder])
 }
 
+model AdminCredential {
+  id           String   @id @default("default")
+  email        String   @unique
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}
+
 model PageView {
   id        String   @id @default(cuid())
   day       DateTime @db.Date

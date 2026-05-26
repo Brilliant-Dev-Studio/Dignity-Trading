@@ -13,6 +13,7 @@ import {
   Layers,
   LayoutDashboard,
   LogOut,
+  Settings,
   TrendingUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +39,7 @@ const navItems = [
     href: "/admin/courses/market-analysis",
     icon: BarChart2,
   },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 const SIDEBAR_COLLAPSED_KEY = "admin-sidebar-collapsed";

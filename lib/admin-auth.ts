@@ -1,27 +1,20 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import {
+  ensureAdminCredentialSeed,
+  getAdminEmail as readAdminEmail,
+  setAdminPassword,
+  verifyAdminLogin,
+} from "@/lib/admin-credentials";
 
 const ADMIN_SESSION_COOKIE = "dignity_admin_session";
 const ADMIN_SESSION_VALUE = "admin";
 const SESSION_MAX_AGE = 60 * 60 * 8;
 
-function getAdminEmail() {
-  return process.env.ADMIN_EMAIL ?? "admin@dignity.local";
-}
-
-function getAdminPassword() {
-  if (process.env.ADMIN_PASSWORD) {
-    return process.env.ADMIN_PASSWORD;
-  }
-
-  return process.env.NODE_ENV === "production" ? "" : "admin12345";
-}
-
 function getAuthSecret() {
   return (
     process.env.ADMIN_AUTH_SECRET ??
-    process.env.ADMIN_PASSWORD ??
     "dignity-trading-local-admin-secret"
   );
 }
@@ -66,13 +59,20 @@ export async function requireAdmin() {
   }
 }
 
+export async function getAdminEmail() {
+  return readAdminEmail();
+}
+
 export async function loginAdmin(formData: FormData) {
   "use server";
 
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
 
-  if (email !== getAdminEmail().toLowerCase() || password !== getAdminPassword()) {
+  await ensureAdminCredentialSeed();
+
+  const ok = await verifyAdminLogin(email, password);
+  if (!ok) {
     redirect("/admin/login?error=invalid");
   }
 
@@ -126,13 +126,47 @@ export async function logoutAdmin() {
   redirect("/admin/login");
 }
 
+export async function changeAdminPassword(formData: FormData) {
+  "use server";
+
+  if (!(await isAdminAuthenticated())) {
+    redirect("/admin/login");
+  }
+
+  const current = String(formData.get("currentPassword") ?? "");
+  const next = String(formData.get("newPassword") ?? "");
+  const confirm = String(formData.get("confirmPassword") ?? "");
+
+  if (!current || !next || !confirm) {
+    redirect("/admin/settings?error=missing");
+  }
+  if (next.length < 8) {
+    redirect("/admin/settings?error=short");
+  }
+  if (next !== confirm) {
+    redirect("/admin/settings?error=mismatch");
+  }
+  if (next === current) {
+    redirect("/admin/settings?error=same");
+  }
+
+  const email = await readAdminEmail();
+  const ok = await verifyAdminLogin(email, current);
+  if (!ok) {
+    redirect("/admin/settings?error=invalidCurrent");
+  }
+
+  await setAdminPassword(next);
+  redirect("/admin/settings?toast=passwordChanged");
+}
+
 export function getAdminLoginHint() {
   if (process.env.NODE_ENV === "production") {
     return null;
   }
 
   return {
-    email: getAdminEmail(),
-    password: getAdminPassword(),
+    email: process.env.ADMIN_EMAIL ?? "admin@dignity.local",
+    password: process.env.ADMIN_PASSWORD ?? "admin12345",
   };
 }

@@ -6,7 +6,6 @@ const ADMIN_SESSION_VALUE = "admin";
 function getAuthSecret() {
   return (
     process.env.ADMIN_AUTH_SECRET ??
-    process.env.ADMIN_PASSWORD ??
     "dignity-trading-local-admin-secret"
   );
 }
