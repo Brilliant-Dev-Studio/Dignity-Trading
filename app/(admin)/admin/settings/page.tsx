@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import AdminToastFromQuery from "../AdminToastFromQuery";
 import { changeAdminPassword, getAdminEmail } from "@/lib/admin-auth";
 import PasswordField from "@/app/(auth)/admin/login/PasswordField";
+import SubmitPasswordButton from "./SubmitPasswordButton";
 
 export default async function AdminSettingsPage() {
   const email = await getAdminEmail();
@@ -87,7 +87,7 @@ export default async function AdminSettingsPage() {
                 />
               </div>
               <div className="flex justify-end pt-2">
-                <Button type="submit">Update password</Button>
+                <SubmitPasswordButton />
               </div>
             </form>
           </CardContent>
