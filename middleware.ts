@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+
+
 const ADMIN_SESSION_COOKIE = "dignity_admin_session";
 const ADMIN_SESSION_VALUE = "admin";
 
