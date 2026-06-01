@@ -175,19 +175,19 @@ export function PublicCourseEditor({
           <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{pageHeading}</h2>
           <div className="mt-1 max-w-2xl text-sm text-zinc-600">{blurb}</div>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <Link
             href={liveHref}
             target="_blank"
             rel="noreferrer"
             className={cn(
-              "inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-950 shadow-sm transition-colors hover:bg-zinc-50",
+              "inline-flex h-10 w-full items-center justify-center rounded-md border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-950 shadow-sm transition-colors hover:bg-zinc-50 sm:w-auto",
               "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--brand-700)]",
             )}
           >
             View live page
           </Link>
-          <Button type="button" onClick={save} disabled={saving || loading}>
+          <Button type="button" onClick={save} disabled={saving || loading} className="w-full sm:w-auto">
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -324,7 +324,7 @@ export function PublicCourseEditor({
                   key={row.id}
                   className="flex flex-col gap-2 rounded-lg border border-zinc-200 bg-zinc-50/50 p-3 sm:flex-row sm:items-center"
                 >
-                  <span className="w-10 shrink-0 text-xs font-semibold tabular-nums text-zinc-500">
+                  <span className="shrink-0 text-xs font-semibold tabular-nums text-zinc-500 sm:w-10">
                     {index + 1}.
                   </span>
                   <Input

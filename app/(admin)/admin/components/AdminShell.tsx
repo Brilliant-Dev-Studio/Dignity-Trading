@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import {
   BarChart2,
   ChevronLeft,
@@ -13,8 +13,10 @@ import {
   Layers,
   LayoutDashboard,
   LogOut,
+  Menu,
   Settings,
   TrendingUp,
+  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -79,6 +81,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     getSidebarCollapsedSnapshot,
     getSidebarCollapsedServerSnapshot,
   );
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const toggleSidebar = useCallback(() => {
     const next = !getSidebarCollapsedSnapshot();
@@ -86,15 +89,46 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     window.dispatchEvent(new Event(SIDEBAR_COLLAPSED_EVENT));
   }, []);
 
+  // Close mobile drawer on route change.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll while drawer is open.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
   return (
     <main className="min-h-dvh bg-zinc-50 text-zinc-950">
       <div
         className={cn(
           "grid min-h-dvh transition-[grid-template-columns]",
+          "grid-cols-1",
           collapsed ? "lg:grid-cols-[84px_1fr]" : "lg:grid-cols-[260px_1fr]",
         )}
       >
-        <aside className="relative h-dvh overflow-visible border-b border-white/10 bg-zinc-950 text-white lg:sticky lg:top-0 lg:border-b-0 lg:border-r">
+        {mobileOpen ? (
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-40 bg-black/55 backdrop-blur-[1px] lg:hidden"
+          />
+        ) : null}
+
+        <aside
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] transform-gpu border-b border-white/10 bg-zinc-950 text-white shadow-2xl transition-transform duration-300 ease-out",
+            mobileOpen ? "translate-x-0" : "-translate-x-full",
+            "lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:h-dvh lg:w-auto lg:max-w-none lg:translate-x-0 lg:border-b-0 lg:border-r lg:shadow-none",
+          )}
+        >
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(760px_420px_at_20%_20%,rgba(84,168,230,0.34),transparent_60%),radial-gradient(620px_360px_at_84%_76%,rgba(255,190,55,0.20),transparent_64%),linear-gradient(to_bottom,rgba(0,0,0,0.10),rgba(0,0,0,0.60))]"
@@ -132,7 +166,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <div
               className={cn(
                 "flex min-h-24 items-center border-b border-white/10 px-5 py-5",
-                collapsed ? "justify-center" : "justify-between gap-3",
+                collapsed ? "lg:justify-center" : "justify-between gap-3",
               )}
             >
               <div className="flex min-w-0 items-center gap-3">
@@ -153,9 +187,17 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                   </div>
                 ) : null}
               </div>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+                className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/15 lg:hidden"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
-            <nav className="flex flex-1 gap-2 overflow-y-auto px-3 py-4 lg:flex-col">
+            <nav className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-4">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive =
@@ -172,43 +214,46 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                       "hover:bg-white/10 hover:text-white",
                       isActive &&
                         "bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-sm",
-                      collapsed && "justify-center",
+                      collapsed && "lg:justify-center",
                     )}
                     title={item.label}
                   >
                     <Icon className="h-4 w-4 shrink-0" />
-                    {!collapsed ? <span>{item.label}</span> : null}
+                    {!collapsed ? <span>{item.label}</span> : (
+                      <span className="lg:hidden">{item.label}</span>
+                    )}
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="hidden border-t border-white/10 p-4 lg:block">
+            <div className="border-t border-white/10 p-4">
               {!collapsed ? (
-                <Badge className="border-white/15 bg-white/10 text-white/80">
+                <Badge className="hidden border-white/15 bg-white/10 text-white/80 lg:inline-flex">
                   Protected
                 </Badge>
               ) : null}
               <a
                 href="/admin/logout"
                 className={cn(
-                  "mt-3 inline-flex w-full items-center justify-center gap-2",
+                  "inline-flex w-full items-center justify-center gap-2",
                   "rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white",
                   "shadow-sm transition-colors hover:bg-white/15",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
-                  collapsed && "px-0",
+                  !collapsed && "lg:mt-3",
+                  collapsed && "lg:px-0",
                 )}
                 title="Logout"
               >
                 <LogOut className="h-4 w-4" />
-                {!collapsed ? "Logout" : null}
+                {!collapsed ? "Logout" : <span className="lg:hidden">Logout</span>}
               </a>
             </div>
           </div>
         </aside>
 
-        <section className="flex h-dvh min-w-0 flex-col">
-          <header className="relative z-20 flex min-h-24 shrink-0 items-center justify-between overflow-hidden border-b border-white/10 bg-zinc-950 px-4 py-5 text-white sm:px-6 lg:px-8">
+        <section className="flex min-h-dvh min-w-0 flex-col lg:h-dvh">
+          <header className="relative z-20 flex min-h-20 shrink-0 items-center justify-between overflow-hidden border-b border-white/10 bg-zinc-950 px-4 py-4 text-white sm:min-h-24 sm:py-5 sm:px-6 lg:px-8">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(760px_420px_at_20%_20%,rgba(84,168,230,0.34),transparent_60%),radial-gradient(620px_360px_at_84%_76%,rgba(255,190,55,0.20),transparent_64%),linear-gradient(to_bottom,rgba(0,0,0,0.10),rgba(0,0,0,0.60))]"
@@ -222,35 +267,32 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 type="button"
                 variant="ghost"
                 size="icon"
-                onClick={toggleSidebar}
+                onClick={() => setMobileOpen(true)}
                 className="lg:hidden"
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                aria-label="Open menu"
+                title="Open menu"
               >
-                {collapsed ? (
-                  <ChevronRight className="h-5 w-5" />
-                ) : (
-                  <ChevronLeft className="h-5 w-5" />
-                )}
+                <Menu className="h-5 w-5" />
               </Button>
               <div className="min-w-0">
-                <h1 className="truncate text-xl font-semibold tracking-tight">
+                <h1 className="truncate text-lg font-semibold tracking-tight sm:text-xl">
                   Admin Workspace
                 </h1>
-                <p className="mt-1 text-sm text-white/65">
+                <p className="mt-0.5 hidden text-sm text-white/65 sm:mt-1 sm:block">
                   Manage content and trading education operations.
                 </p>
               </div>
             </div>
             <a
               href="/admin/logout"
-              className="relative z-10 inline-flex items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-white/15 lg:hidden"
+              className="relative z-10 inline-flex shrink-0 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-2.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-white/15 sm:px-3 sm:text-sm lg:hidden"
+              aria-label="Logout"
             >
               <LogOut className="h-4 w-4" />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
             </a>
           </header>
-          <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+          <div className="min-h-0 flex-1 lg:overflow-y-auto">{children}</div>
         </section>
       </div>
     </main>

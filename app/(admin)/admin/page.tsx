@@ -305,7 +305,7 @@ export default function AdminDashboardPage() {
         <div
           role="tablist"
           aria-label="Visitor range"
-          className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 text-xs font-medium"
+          className="flex flex-wrap items-center gap-1 self-start rounded-xl border border-zinc-200 bg-white p-1 text-xs font-medium"
         >
           {VISITOR_RANGE_OPTIONS.map((opt) => {
             const active = visitorRange === opt.value;

@@ -226,7 +226,7 @@ export default function BlogListPage() {
 
       <Card className="overflow-hidden !shadow-none">
         <div className="border-b border-zinc-200 bg-gradient-to-b from-white to-zinc-50/70 p-5">
-          <div className="grid gap-4 lg:grid-cols-[1fr_180px_180px]">
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[1fr_180px_180px] lg:gap-4">
             <div className="rounded-xl bg-white p-4">
               <div className="space-y-3">
                 <Label
@@ -356,7 +356,85 @@ export default function BlogListPage() {
             No blogs match the selected filters.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+            <ul className="divide-y divide-zinc-200 border-t border-zinc-200 bg-white md:hidden">
+              {filteredBlogs.map((blog) => (
+                <li key={blog.id} className="flex gap-3 px-4 py-3">
+                  {blog.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={blog.coverUrl}
+                      alt=""
+                      className="h-14 w-20 shrink-0 rounded-lg object-cover ring-1 ring-zinc-200"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="h-14 w-20 shrink-0 rounded-lg bg-zinc-100 ring-1 ring-zinc-200" />
+                  )}
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <p
+                        className="line-clamp-2 text-sm font-medium text-zinc-950"
+                        title={blog.title}
+                      >
+                        {blog.title}
+                      </p>
+                      <Badge
+                        className={[
+                          "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                          "ring-1",
+                          statusChipClass(blog.status),
+                        ].join(" ")}
+                      >
+                        {blog.status}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
+                      <span className="truncate">By {blog.author}</span>
+                      <span aria-hidden>·</span>
+                      <span>{blog.category}</span>
+                      <span aria-hidden>·</span>
+                      <span>{blog.updated}</span>
+                      <span aria-hidden>·</span>
+                      <span>{blog.reads} reads</span>
+                    </div>
+                    <div className="mt-1 flex items-center gap-2">
+                      <Link
+                        href={`/admin/blogs/edit/${blog.id}/details`}
+                        className={cn(
+                          "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm",
+                          "transition hover:bg-zinc-50",
+                        )}
+                        aria-label={`Edit “${blog.title}”`}
+                      >
+                        <Pencil className="h-3.5 w-3.5" aria-hidden />
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={deletingId === blog.id}
+                        onClick={() => setDeleteTarget(blog)}
+                        className={cn(
+                          "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-rose-600 shadow-sm",
+                          "transition hover:border-rose-200 hover:bg-rose-50",
+                          "disabled:pointer-events-none disabled:opacity-50",
+                        )}
+                        aria-label={`Delete “${blog.title}”`}
+                      >
+                        {deletingId === blog.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                        ) : (
+                          <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                        )}
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead className="bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
                 <tr>
@@ -456,6 +534,7 @@ export default function BlogListPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {!loading && !loadError && total > 0 ? (
