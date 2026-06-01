@@ -19,7 +19,6 @@ import {
   X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -263,17 +262,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               className="pointer-events-none absolute inset-0 z-0 opacity-35 [background-image:radial-gradient(rgba(255,255,255,0.20)_1px,transparent_1px)] [background-size:14px_14px]"
             />
             <div className="relative z-10 flex min-w-0 items-center gap-3">
-              <Button
+              <button
                 type="button"
-                variant="ghost"
-                size="icon"
                 onClick={() => setMobileOpen(true)}
-                className="lg:hidden"
                 aria-label="Open menu"
                 title="Open menu"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/25 bg-white/10 text-white shadow-sm transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 lg:hidden"
               >
                 <Menu className="h-5 w-5" />
-              </Button>
+              </button>
               <div className="min-w-0">
                 <h1 className="truncate text-lg font-semibold tracking-tight sm:text-xl">
                   Admin Workspace
